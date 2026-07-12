@@ -1,6 +1,18 @@
 module.exports = {
   apps: [
     {
+      name: 'smart-panchayat-web',
+      script: 'npx',
+      args: 'serve public -l 4001 --no-clipboard',
+      interpreter: 'none',
+      autorestart: true,
+      watch: false,
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      out_file: 'logs/web-out.log',
+      error_file: 'logs/web-error.log',
+      env: { NODE_ENV: 'production' },
+    },
+    {
       name: 'smart-panchayat-api',
       script: 'src/app.js',
 

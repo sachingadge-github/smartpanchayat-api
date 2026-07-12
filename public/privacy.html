@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Smart Panchayat</title>
+  <meta name="description" content="Privacy Policy for Smart Panchayat app — how we collect, use, and protect your data." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --green: #1B6B3A;
+      --green-dark: #0F4C35;
+      --green-light: #E8F5EE;
+      --orange: #F5A623;
+      --navy: #1E3A5F;
+      --text: #1F2937;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    /* NAV */
+    nav {
+      background: #fff; border-bottom: 1px solid var(--border);
+      padding: 0 5%; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { height: 38px; width: 38px; object-fit: contain; border-radius: 8px; }
+    .logo-fallback {
+      width: 38px; height: 38px; background: var(--green-dark);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    .nav-name { font-size: 17px; font-weight: 800; color: var(--navy); }
+    .nav-name span { color: var(--green); }
+    .back-btn {
+      font-size: 14px; color: var(--green); font-weight: 600;
+      text-decoration: none; display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--green);
+      transition: all 0.2s;
+    }
+    .back-btn:hover { background: var(--green); color: #fff; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--green-dark) 0%, #1B6B4A 100%);
+      padding: 56px 5% 48px; text-align: center;
+    }
+    .hero h1 { font-size: 36px; font-weight: 900; color: #fff; margin-bottom: 10px; letter-spacing: -0.5px; }
+    .hero p { font-size: 15px; color: rgba(255,255,255,0.65); }
+    .meta-chips {
+      display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px;
+    }
+    .chip {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 500;
+    }
+
+    /* CONTENT */
+    .container { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .section-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px; margin-bottom: 20px;
+    }
+    .section-card h2 {
+      font-size: 18px; font-weight: 800; color: var(--navy);
+      margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .section-num {
+      width: 30px; height: 30px; background: var(--green-light);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800; color: var(--green); flex-shrink: 0;
+    }
+    p { font-size: 15px; color: #374151; margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+    ul { list-style: none; margin: 8px 0; }
+    ul li {
+      font-size: 15px; color: #374151;
+      padding: 6px 0 6px 22px; position: relative; border-bottom: 1px solid #F9FAFB;
+    }
+    ul li:last-child { border-bottom: none; }
+    ul li::before { content: '→'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
+    th { text-align: left; padding: 10px 14px; background: var(--green-light); font-weight: 700; font-size: 12px; color: var(--green); text-transform: uppercase; letter-spacing: 0.4px; }
+    td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: #374151; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+
+    .badge { display: inline-block; border-radius: 20px; padding: 2px 9px; font-size: 11px; font-weight: 700; }
+    .badge-yes { background: #dcfce7; color: #166534; }
+    .badge-no { background: #fee2e2; color: #991b1b; }
+    .badge-law { background: #fef3c7; color: #92400e; }
+
+    .highlight-box {
+      background: var(--green-light); border: 1px solid #bbf7d0;
+      border-radius: 12px; padding: 16px 20px; margin-top: 14px;
+    }
+    .highlight-box p { color: var(--green-dark); font-weight: 500; font-size: 14px; margin: 0; }
+
+    .contact-box {
+      background: linear-gradient(135deg, var(--green-dark), #1B6B4A);
+      border-radius: 14px; padding: 24px; margin-top: 14px;
+    }
+    .contact-box p { color: rgba(255,255,255,0.85); margin-bottom: 8px; font-size: 14px; }
+    .contact-box a { color: #81C784; font-weight: 600; text-decoration: none; }
+    .contact-box a:hover { text-decoration: underline; }
+    .contact-box .contact-name { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+
+    footer {
+      text-align: center; padding: 24px;
+      font-size: 13px; color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--green); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .section-card { padding: 22px 18px; }
+      .hero h1 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/logo.png" alt="Smart Panchayat Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="logo-fallback" style="display:none">🌾</div>
+    <div class="nav-name">Smart<span>Panchayat</span></div>
+  </a>
+  <a href="/" class="back-btn">← Back to Home</a>
+</nav>
+
+<div class="hero">
+  <h1>Privacy Policy</h1>
+  <p>Smart Panchayat is committed to protecting your privacy and your data.</p>
+  <div class="meta-chips">
+    <span class="chip">📅 Last updated: July 2026</span>
+    <span class="chip">📱 App: Smart Panchayat</span>
+    <span class="chip">📦 com.nexbuild.smartpanchayat</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section-card">
+    <h2><span class="section-num">1</span> Introduction</h2>
+    <p>Smart Panchayat ("we", "our", or "the app") is a digital governance platform developed by <strong>NexBuild</strong> to connect citizens with their Gram Panchayat for civic services including complaint registration, certificate applications, bill payments, and official notices.</p>
+    <p>This Privacy Policy explains what information we collect, why we collect it, and how it is used and protected. By using the app, you agree to the practices described in this policy.</p>
+    <div class="highlight-box">
+      <p>🔒 We do not sell your personal data to anyone. Ever.</p>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="section-num">2</span> Information We Collect</h2>
+    <table>
+      <thead>
+        <tr><th>Data Type</th><th>What We Collect</th><th>Why</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Identity</strong></td><td>Full name, age, gender</td><td>Citizen profile for GP records</td></tr>
+        <tr><td><strong>Contact</strong></td><td>Mobile number</td><td>OTP login & complaint status updates</td></tr>
+        <tr><td><strong>Location</strong></td><td>Village, Taluka, District; approximate GPS (only when filing a complaint)</td><td>Route complaints to correct panchayat</td></tr>
+        <tr><td><strong>User ID</strong></td><td>App-generated citizen ID</td><td>Identify records across sessions</td></tr>
+        <tr><td><strong>Uploaded Files</strong></td><td>Photos or documents attached to complaints or certificate requests</td><td>Process your service request</td></tr>
+        <tr><td><strong>Device Info</strong></td><td>Device model, OS version (anonymous)</td><td>Crash diagnostics and compatibility</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box" style="margin-top:16px">
+      <p>We do <strong>not</strong> collect: passwords (OTP-only login), payment card numbers, Aadhaar numbers, or any biometric data.</p>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="section-num">3</span> How We Use Your Information</h2>
+    <ul>
+      <li>Authenticate you via OTP and maintain your session securely</li>
+      <li>Register your complaints and route them to the correct panchayat officer</li>
+      <li>Process certificate and document applications</li>
+      <li>Send push notifications about complaint status, new notices, and payment reminders</li>
+      <li>Display relevant government schemes based on your village and profile</li>
+      <li>Improve app stability and fix crashes using anonymous device diagnostics</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="section-num">4</span> Data Sharing</h2>
+    <table>
+      <thead>
+        <tr><th>Recipient</th><th>What is Shared</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Gram Panchayat Officers</td>
+          <td>Your name, mobile, complaint/document details</td>
+          <td><span class="badge badge-yes">Yes — to process your request</span></td>
+        </tr>
+        <tr>
+          <td>Third-party companies</td>
+          <td>Any personal data</td>
+          <td><span class="badge badge-no">No</span></td>
+        </tr>
+        <tr>
+          <td>Advertisers</td>
+          <td>Any data</td>
+          <td><span class="badge badge-no">No</span></td>
+        </tr>
+        <tr>
+          <td>Government authorities</td>
+          <td>Only if required by law or court order</td>
+          <td><span class="badge badge-law">Only if legally required</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="section-num">5</span> Data Security</h2>
+    <ul>
+      <li>All data is transmitted over HTTPS (TLS 1.2+) — encrypted in transit</li>
+      <li>Authentication tokens are stored in device secure storage (expo-secure-store), not plain storage</li>
+      <li>Panchayat admin access is role-based — officers can only see their own panchayat's data</li>
+      <li>No passwords are stored — the app uses OTP-only login</li>
+      <li>Uploaded files are stored on secured cloud servers with access controls</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="section-num">6</span> App Permissions</h2>
+    <table>
+      <thead>
+        <tr><th>Permission</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Camera</strong></td><td>Attach photos when filing civic complaints (e.g. road damage, broken streetlight)</td></tr>
+        <tr><td><strong>Storage (Read/Write)</strong></td><td>Upload documents for certificate applications; save downloaded certificates</td></tr>
+        <tr><td><strong>Location (Approximate)</strong></td><td>Auto-fill location when filing a complaint. <strong>Not tracked in background.</strong></td></tr>
+        <tr><td><strong>Notifications (VIBRATE)</strong></td><td>Alert you when your complaint or certificate is updated</td></tr>
+        <tr><td><strong>Boot Completed</strong></td><td>Re-register push notification channel after device restart</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box" style="margin-top:16px">
+      <p>📍 Location is accessed <strong>only when you actively file a complaint</strong>. The app does not track your location in the background.</p>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="section-num">7</span> Data Retention</h2>
+    <p>Your profile and complaint records are retained as long as your account is active and as required by government record-keeping regulations for gram panchayat operations.</p>
+    <p>If you delete your account, your personal profile data is removed within 30 days. Complaint and certificate records may be retained by the panchayat as official government records per applicable law.</p>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="section-num">8</span> Your Rights</h2>
+    <ul>
+      <li><strong>Access:</strong> Request a copy of your personal data we hold</li>
+      <li><strong>Correction:</strong> Update incorrect name, mobile number, or address in your profile</li>
+      <li><strong>Deletion:</strong> Request account deletion — we will remove your profile data within 30 days</li>
+      <li><strong>Opt-out:</strong> Disable push notifications at any time from your device settings</li>
+    </ul>
+    <p style="margin-top:14px">To exercise any of these rights, email us at the address in Section 11.</p>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="section-num">9</span> Children's Privacy</h2>
+    <p>Smart Panchayat is intended for citizens aged 18 and above. We do not knowingly collect data from minors. If you believe a minor has registered, please contact us and we will delete their account immediately.</p>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="section-num">10</span> Changes to This Policy</h2>
+    <p>We may update this Privacy Policy when features change or regulations require it. We will notify registered users via push notification and update the "Last updated" date at the top of this page. Continued use of the app after changes means you accept the updated policy.</p>
+  </div>
+
+  <div class="section-card">
+    <h2><span class="section-num">11</span> Contact Us</h2>
+    <p>For privacy questions, data deletion requests, or any concerns:</p>
+    <div class="contact-box">
+      <div class="contact-name">Smart Panchayat — NexBuild</div>
+      <p>📧 Privacy: <a href="mailto:privacy@smartpanchayat.in">privacy@smartpanchayat.in</a></p>
+      <p>📧 Support: <a href="mailto:support@smartpanchayat.in">support@smartpanchayat.in</a></p>
+      <p style="margin-top:10px;font-size:13px;color:rgba(255,255,255,0.5)">We respond to all privacy requests within 5 business days.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Smart Panchayat · Built by <strong>NexBuild</strong> &nbsp;·&nbsp; <a href="/">Home</a> &nbsp;·&nbsp; 🇮🇳 Made in India</p>
+</footer>
+
+</body>
+</html>

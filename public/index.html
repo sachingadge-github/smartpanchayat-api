@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Panchayat — Digital Governance for Every Village</title>
+  <meta name="description" content="Smart Panchayat brings digital governance to every Gram Panchayat in India. File complaints, download certificates, pay water bills and receive village notices — all from your phone." />
+  <meta name="keywords" content="gram panchayat, digital governance, smart panchayat, village app, india, complaint, certificate, water bill" />
+  <meta property="og:title" content="Smart Panchayat — Digital Governance for Every Village" />
+  <meta property="og:description" content="Simple. Transparent. Accessible. The official civic platform for Gram Panchayats." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/og-image.png" />
+  <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" />
+  <link rel="icon" href="./logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --g900: #0A3D1F;
+      --g800: #145C30;
+      --g700: #1B7A3E;
+      --g600: #2E9E55;
+      --g400: #4CAF50;
+      --g100: #E8F5E9;
+      --g50:  #F1FAF3;
+      --orange: #F5A623;
+      --navy:  #1A2E4A;
+      --text:  #1F2937;
+      --muted: #6B7280;
+      --border:#E5E7EB;
+      --white: #ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; line-height: 1.6; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 6%;
+      height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-img {
+      width: 44px; height: 44px;
+      border-radius: 10px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.07);
+    }
+    .nav-logo-img img { width: 44px; height: 44px; object-fit: contain; display: block; }
+    .logo-svg-fallback { display: none; }
+    .nav-logo-img img[src=""][src] ~ .logo-svg-fallback,
+    .nav-logo-img:not(:has(img[complete])) .logo-svg-fallback { display: flex; }
+    .nav-brand { font-size: 18px; font-weight: 800; color: var(--navy); letter-spacing: -0.3px; }
+    .nav-brand em { color: var(--g700); font-style: normal; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { color: var(--muted); font-size: 14px; font-weight: 500; text-decoration: none; transition: color .15s; }
+    .nav-links a:hover { color: var(--navy); }
+    .nav-pill {
+      background: var(--g700); color: #fff !important;
+      padding: 9px 20px; border-radius: 50px; font-weight: 700 !important; font-size: 14px;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: background .15s, transform .15s;
+    }
+    .nav-pill:hover { background: var(--g800) !important; transform: translateY(-1px); }
+    .nav-ham { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--g50) 0%, #fff 50%, #f0f9f2 100%);
+      padding: 80px 6% 60px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(76,175,80,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1180px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--g100); border: 1px solid #c3e6cb;
+      border-radius: 50px; padding: 5px 14px; margin-bottom: 22px;
+      font-size: 12.5px; font-weight: 700; color: var(--g800);
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .eyebrow-dot { width: 6px; height: 6px; background: var(--g600); border-radius: 50%; }
+    .hero h1 {
+      font-size: clamp(34px, 4.5vw, 60px);
+      font-weight: 900; color: var(--navy);
+      line-height: 1.07; letter-spacing: -2px;
+      margin-bottom: 10px;
+    }
+    .hero h1 .hl { color: var(--g700); }
+    .hero-sub {
+      font-size: 16px; font-weight: 600; color: var(--g700);
+      margin-bottom: 18px; letter-spacing: 0.3px;
+    }
+    .hero-sub span { color: var(--muted); font-weight: 400; margin: 0 5px; }
+    .hero-desc {
+      font-size: 17px; color: var(--muted);
+      line-height: 1.75; margin-bottom: 36px; max-width: 480px;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .store-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--navy); color: #fff;
+      border-radius: 12px; padding: 10px 20px;
+      text-decoration: none; transition: all .2s;
+      border: 1.5px solid transparent;
+    }
+    .store-btn:hover { background: var(--g900); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,46,74,0.2); }
+    .store-btn.outline {
+      background: transparent; color: var(--navy);
+      border-color: var(--border);
+    }
+    .store-btn.outline:hover { border-color: var(--navy); background: var(--g50); transform: translateY(-2px); }
+    .store-btn-text { display: flex; flex-direction: column; }
+    .store-btn-text small { font-size: 10px; font-weight: 500; opacity: 0.7; line-height: 1; }
+    .store-btn-text strong { font-size: 15px; font-weight: 800; line-height: 1.2; }
+    .hero-badges {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 36px;
+    }
+    .hero-badge-item {
+      display: flex; align-items: center; gap: 8px;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .hb-icon { font-size: 18px; }
+    .hb-text { }
+    .hb-title { font-size: 12px; font-weight: 700; color: var(--navy); }
+    .hb-desc { font-size: 11px; color: var(--muted); }
+
+    /* ── PHONE ── */
+    .hero-visual { display: flex; justify-content: center; align-items: center; }
+    .phone-scene { position: relative; }
+    .phone-glow {
+      position: absolute; inset: -60px;
+      background: radial-gradient(ellipse, rgba(46,158,85,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .phone {
+      width: 270px; height: 560px;
+      background: #fff;
+      border-radius: 44px;
+      border: 2px solid #ddd;
+      box-shadow:
+        0 40px 80px rgba(0,0,0,0.15),
+        0 0 0 8px #f0f0f0,
+        0 0 0 9px #e0e0e0;
+      overflow: hidden;
+      position: relative;
+    }
+    .phone-island {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      width: 100px; height: 32px; background: #111;
+      border-radius: 20px; z-index: 10;
+    }
+    .phone-screen {
+      width: 100%; height: 100%;
+      background: #f5f5f5;
+      padding-top: 44px;
+      overflow: hidden;
+    }
+    /* App header */
+    .app-bar {
+      background: linear-gradient(135deg, var(--g800), var(--g700));
+      padding: 14px 16px 20px;
+      position: relative;
+    }
+    .app-bar-top { display: flex; justify-content: space-between; align-items: center; }
+    .app-greeting { font-size: 9px; color: rgba(255,255,255,0.7); font-weight: 500; }
+    .app-village { font-size: 16px; font-weight: 900; color: #fff; margin-top: 1px; }
+    .app-bell {
+      width: 28px; height: 28px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+    }
+    /* Quick services */
+    .app-body { background: #f7f8fa; flex: 1; }
+    .app-section-label {
+      font-size: 7.5px; font-weight: 800; color: var(--muted);
+      letter-spacing: 0.6px; text-transform: uppercase;
+      padding: 12px 14px 6px;
+    }
+    .app-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 6px; padding: 0 14px 8px;
+    }
+    .app-service {
+      background: #fff; border-radius: 10px;
+      padding: 10px 6px 8px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    }
+    .app-svc-icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; margin: 0 auto 5px;
+    }
+    .app-svc-name { font-size: 6.5px; color: #374151; font-weight: 600; }
+    /* Notice */
+    .app-notice {
+      margin: 0 14px 8px;
+      background: #fff; border-radius: 10px;
+      padding: 9px 10px;
+      border-left: 3px solid var(--g600);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .notice-tag {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 6px; font-weight: 800; color: var(--g700); letter-spacing: 0.4px;
+      text-transform: uppercase; margin-bottom: 3px;
+    }
+    .notice-dot { width: 5px; height: 5px; background: var(--g600); border-radius: 50%; }
+    .notice-text { font-size: 7.5px; color: #374151; line-height: 1.4; font-weight: 500; }
+    /* Status rows */
+    .app-status-list { padding: 0 14px; display: flex; flex-direction: column; gap: 4px; }
+    .app-status-row {
+      background: #fff; border-radius: 8px; padding: 7px 9px;
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .status-dot.resolved { background: #22c55e; }
+    .status-dot.progress { background: var(--orange); }
+    .status-dot.ready { background: #3b82f6; }
+    .status-info { flex: 1; }
+    .status-title { font-size: 7px; color: #374151; font-weight: 600; }
+    .status-sub { font-size: 5.5px; color: var(--muted); margin-top: 1px; }
+    /* App bottom bar */
+    .app-bottom {
+      display: flex; justify-content: space-around; align-items: center;
+      background: #fff; border-top: 1px solid #eee;
+      padding: 8px 0 12px;
+      position: absolute; bottom: 0; left: 0; right: 0;
+    }
+    .app-tab { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .app-tab-icon { font-size: 14px; }
+    .app-tab-label { font-size: 6px; color: var(--muted); font-weight: 500; }
+    .app-tab.active .app-tab-label { color: var(--g700); font-weight: 700; }
+    .app-tab-plus {
+      width: 32px; height: 32px; background: var(--g700);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #fff; font-weight: 400; line-height: 1;
+    }
+
+    /* Floating cards on phone */
+    .phone-card {
+      position: absolute;
+      background: #fff;
+      border-radius: 14px;
+      padding: 10px 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      border: 1px solid var(--border);
+      animation: floatCard 4s ease-in-out infinite;
+    }
+    .phone-card.card-left { left: -90px; top: 120px; animation-delay: 0s; }
+    .phone-card.card-right { right: -80px; bottom: 140px; animation-delay: 2s; }
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .pc-label { font-size: 9px; color: var(--muted); margin-bottom: 3px; font-weight: 500; }
+    .pc-value { font-size: 17px; font-weight: 900; color: var(--navy); }
+    .pc-tag { font-size: 9px; font-weight: 600; color: var(--g700); margin-top: 2px; display: flex; align-items: center; gap: 3px; }
+
+    /* ── TRUST BAR ── */
+    .trust {
+      background: var(--navy);
+      padding: 18px 6%;
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .trust-label { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500; margin-right: 4px; }
+    .trust-item {
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 7px 13px;
+      font-size: 12.5px; color: rgba(255,255,255,0.7); font-weight: 500;
+    }
+
+    /* ── SECTIONS ── */
+    .section { padding: 96px 6%; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--g100); color: var(--g800);
+      border-radius: 50px; padding: 5px 14px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .section h2 {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 900; color: var(--navy);
+      line-height: 1.1; letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .section-desc { font-size: 17px; color: var(--muted); max-width: 540px; line-height: 1.7; margin-bottom: 56px; }
+
+    /* ── FEATURES ── */
+    .features-bg { background: #fff; }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .feat-card {
+      background: var(--g50); border: 1px solid #d1e7d9;
+      border-radius: 18px; padding: 28px 24px;
+      transition: all .2s;
+    }
+    .feat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); background: #fff; }
+    .feat-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px; margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .fi-green { background: var(--g100); }
+    .fi-blue { background: #dbeafe; }
+    .fi-orange { background: #fef3c7; }
+    .fi-purple { background: #ede9fe; }
+    .fi-red { background: #fee2e2; }
+    .fi-teal { background: #ccfbf1; }
+    .feat-card h3 { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .feat-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ── HOW IT WORKS ── */
+    .hiw-bg { background: var(--g50); }
+    .hiw-steps {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 40px; position: relative;
+    }
+    .hiw-steps::before {
+      content: '';
+      position: absolute; top: 28px; left: calc(16.6% + 16px); right: calc(16.6% + 16px);
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--g400) 0, var(--g400) 8px, transparent 8px, transparent 16px);
+    }
+    .hiw-step { text-align: center; }
+    .step-num {
+      width: 56px; height: 56px;
+      border-radius: 50%; background: var(--g700);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900; color: #fff;
+      margin: 0 auto 20px; position: relative; z-index: 1;
+      box-shadow: 0 4px 16px rgba(46,158,85,0.35);
+    }
+    .hiw-step h3 { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+    .hiw-step p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    /* ── FOR WHOM ── */
+    .whom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .whom-card {
+      border-radius: 20px; padding: 36px 32px;
+      border: 1px solid var(--border);
+    }
+    .whom-card.citizens { background: var(--g50); border-color: #c3e6cb; }
+    .whom-card.officers { background: #f0f4ff; border-color: #c7d2fe; }
+    .whom-icon { font-size: 40px; margin-bottom: 20px; display: block; }
+    .whom-card h3 { font-size: 24px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+    .whom-card > p { font-size: 15px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    .whom-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .whom-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: #374151; font-weight: 500;
+    }
+    .whom-list li::before {
+      content: '✓';
+      width: 20px; height: 20px; flex-shrink: 0;
+      background: var(--g700); color: #fff;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 900; margin-top: 1px;
+    }
+
+    /* ── DOWNLOAD CTA ── */
+    .download-section {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--g900) 100%);
+      padding: 96px 6%; text-align: center; position: relative; overflow: hidden;
+    }
+    .download-section::before {
+      content: '';
+      position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(76,175,80,0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .download-section h2 {
+      font-size: clamp(28px, 3.5vw, 48px); font-weight: 900; color: #fff;
+      letter-spacing: -1.5px; margin-bottom: 12px;
+    }
+    .download-section p { font-size: 18px; color: rgba(255,255,255,0.6); margin-bottom: 40px; }
+    .download-btns { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+    .dl-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: #fff; color: var(--navy);
+      border-radius: 14px; padding: 14px 24px;
+      text-decoration: none; transition: all .2s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .dl-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.3); }
+    .dl-btn.soon { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); cursor: default; }
+    .dl-btn.soon:hover { transform: none; }
+    .dl-btn-text small { display: block; font-size: 10px; font-weight: 500; opacity: 0.6; line-height: 1; }
+    .dl-btn-text strong { display: block; font-size: 16px; font-weight: 800; line-height: 1.2; }
+    .made-in { margin-top: 36px; }
+    .made-in span {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50px; padding: 7px 16px;
+      font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy); border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 56px 6% 32px;
+      color: rgba(255,255,255,0.6);
+    }
+    .footer-grid {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px; margin-bottom: 48px;
+    }
+    .footer-brand .nav-logo { margin-bottom: 14px; display: inline-flex; }
+    .footer-brand p { font-size: 13.5px; line-height: 1.7; max-width: 260px; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; color: #fff; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 14px; }
+    .footer-col a {
+      display: block; font-size: 14px; color: rgba(255,255,255,0.55);
+      text-decoration: none; margin-bottom: 9px; transition: color .15s;
+    }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+      font-size: 13px;
+    }
+    .footer-bottom a { color: rgba(255,255,255,0.4); text-decoration: none; }
+    .footer-bottom a:hover { color: rgba(255,255,255,0.7); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-inner, .hiw-steps, .whom-grid { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .hiw-steps::before { display: none; }
+      nav { padding: 0 5%; }
+      .nav-links { display: none; }
+      .nav-ham { display: block; }
+    }
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .section { padding: 64px 5%; }
+      .hero { padding: 60px 5% 48px; }
+      .hero h1 { letter-spacing: -1.2px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="./index.html" class="nav-logo">
+    <div class="nav-logo-img">
+      <img src="./logo.png" alt="Smart Panchayat"
+        onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin','<svg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><circle cx=\'20\' cy=\'20\' r=\'20\' fill=\'#1B7A3E\'/><path d=\'M20 8C13.37 8 8 13.37 8 20s5.37 12 12 12 12-5.37 12-12S26.63 8 20 8z\' fill=\'url(#g1)\'/><text x=\'50%\' y=\'55%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-size=\'14\' font-family=\'serif\' fill=\'white\'>🌾</text><defs><linearGradient id=\'g1\' x1=\'0\' y1=\'0\' x2=\'40\' y2=\'40\'><stop offset=\'0\' stop-color=\'#2E9E55\'/><stop offset=\'1\' stop-color=\'#145C30\'/></linearGradient></defs></svg>')">
+    </div>
+    <span class="nav-brand">Smart<em>Panchayat</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#download">Download</a></li>
+    <li>
+      <a href="https://play.google.com/store/apps/details?id=com.nexbuild.smartpanchayat" class="nav-pill" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76a2 2 0 0 0 2.07-.18l13.1-7.57-3.1-3.1-12.07 10.85zM20.84 10.5l-2.75-1.59-3.47 3.47 3.47 3.47 2.78-1.6a2 2 0 0 0 0-3.75zM1.01 1.62a2 2 0 0 0-.01.38v19.88a2 2 0 0 0 .01.38L13.41 10.1 1.01 1.62zM5.25.42a2 2 0 0 0-2.07-.18L15.26 12.5l3.1-3.1L5.25.42z"/></svg>
+        Get the App
+      </a>
+    </li>
+  </ul>
+  <button class="nav-ham" aria-label="Menu">
+    <svg width="22" height="22" fill="none" stroke="#1A2E4A" stroke-width="2"><path d="M3 6h16M3 12h16M3 18h16"/></svg>
+  </button>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-dot"></span>
+        Now available on Android &nbsp;·&nbsp; 🇮🇳 Made in India
+      </div>
+      <h1>Digital Governance.<br><span class="hl">Stronger Villages.</span></h1>
+      <p class="hero-sub">Simple <span>•</span> Transparent <span>•</span> Accessible</p>
+      <p class="hero-desc">Smart Panchayat puts every civic service at your fingertips — file complaints, download certificates, pay water bills, and receive village notices without leaving home.</p>
+
+      <div class="hero-actions">
+        <!-- Google Play Store button -->
+        <a href="https://play.google.com/store/apps/details?id=com.nexbuild.smartpanchayat"
+           class="store-btn" target="_blank" rel="noopener" aria-label="Get it on Google Play">
+          <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+fill="currentColor" viewBox="0 0 24 24" >
+<!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
+<path d="m12.954 11.616 2.957-2.957L6.36 3.291c-.633-.342-1.226-.39-1.746-.016zm3.461 3.462 3.074-1.729c.6-.336.929-.812.929-1.34 0-.527-.329-1.004-.928-1.34l-2.783-1.563-3.133 3.132zM4.1 4.002c-.064.197-.1.417-.1.658v14.705c0 .381.084.709.236.97l8.097-8.098zm8.854 8.855L4.902 20.91q.232.09.495.09.47 0 .968-.276l9.255-5.197z"/>
+</svg>
+          <div class="store-btn-text">
+            <small>Get it on</small>
+            <strong>Google Play</strong>
+          </div>
+        </a>
+        <!-- App Store button -->
+        <a href="#download" class="store-btn outline" aria-label="App Store — Coming Soon">
+          
+          <div class="store-btn-text">
+            <small>Coming soon on</small>
+            <strong>App Store</strong>
+          </div>
+        </a>
+      </div>
+
+      <div class="hero-badges">
+        <div class="hero-badge-item">
+          <span class="hb-icon">🛡️</span>
+          <div class="hb-text">
+            <div class="hb-title">Secure</div>
+            <div class="hb-desc">OTP login, no password</div>
+          </div>
+        </div>
+        <div class="hero-badge-item">
+          <span class="hb-icon">⚡</span>
+          <div class="hb-text">
+            <div class="hb-title">Fast</div>
+            <div class="hb-desc">Quick access to services</div>
+          </div>
+        </div>
+        <div class="hero-badge-item">
+          <span class="hb-icon">🆓</span>
+          <div class="hb-text">
+            <div class="hb-title">Free</div>
+            <div class="hb-desc">Forever for citizens</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone Mockup -->
+    <div class="hero-visual">
+      <div class="phone-scene">
+        <div class="phone-glow"></div>
+
+        <!-- Left floating card -->
+        <div class="phone-card card-left">
+          <div class="pc-label">Complaints Resolved</div>
+          <div class="pc-value">241+</div>
+          <div class="pc-tag">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="#2E9E55"><path d="M7 11l5-5 5 5M7 17l5-5 5 5" stroke="#2E9E55" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+            This month
+          </div>
+        </div>
+
+        <div class="phone">
+          <div class="phone-island"></div>
+          <div class="phone-screen">
+            <!-- App Header -->
+            <div class="app-bar">
+              <div class="app-bar-top">
+                <div>
+                  <div class="app-greeting">Good Morning 👋</div>
+                  <div class="app-village">Nerle GP</div>
+                </div>
+                <div class="app-bell">🔔</div>
+              </div>
+            </div>
+
+            <div class="app-body">
+              <!-- Quick Services -->
+              <div class="app-section-label">Quick Services</div>
+              <div class="app-grid">
+                <div class="app-service">
+                  <div class="app-svc-icon fi-red">📋</div>
+                  <div class="app-svc-name">Complaint</div>
+                </div>
+                <div class="app-service">
+                  <div class="app-svc-icon fi-blue">📄</div>
+                  <div class="app-svc-name">Certificate</div>
+                </div>
+                <div class="app-service">
+                  <div class="app-svc-icon fi-teal">💧</div>
+                  <div class="app-svc-name">Water Bill</div>
+                </div>
+                <div class="app-service">
+                  <div class="app-svc-icon fi-orange">📢</div>
+                  <div class="app-svc-name">Notices</div>
+                </div>
+                <div class="app-service">
+                  <div class="app-svc-icon fi-green">🏛️</div>
+                  <div class="app-svc-name">Schemes</div>
+                </div>
+                <div class="app-service">
+                  <div class="app-svc-icon fi-purple">🤖</div>
+                  <div class="app-svc-name">AI Help</div>
+                </div>
+              </div>
+
+              <!-- Notice -->
+              <div class="app-notice">
+                <div class="notice-tag">
+                  <div class="notice-dot"></div>
+                  New Notice
+                </div>
+                <div class="notice-text">Gram Sabha meeting on 15 July 2026 at 10:00 AM</div>
+              </div>
+
+              <!-- Status list -->
+              <div class="app-section-label">Recent Updates</div>
+              <div class="app-status-list">
+                <div class="app-status-row">
+                  <span class="status-dot resolved"></span>
+                  <div class="status-info">
+                    <div class="status-title">Road repair — Complaint #241</div>
+                    <div class="status-sub">✓ Resolved</div>
+                  </div>
+                </div>
+                <div class="app-status-row">
+                  <span class="status-dot progress"></span>
+                  <div class="status-info">
+                    <div class="status-title">Water supply — Complaint #238</div>
+                    <div class="status-sub">⏳ In Progress</div>
+                  </div>
+                </div>
+                <div class="app-status-row">
+                  <span class="status-dot ready"></span>
+                  <div class="status-info">
+                    <div class="status-title">Birth Certificate</div>
+                    <div class="status-sub">⬇ Ready to download</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Tab Bar -->
+            <div class="app-bottom">
+              <div class="app-tab active">
+                <span class="app-tab-icon">🏠</span>
+                <span class="app-tab-label">Home</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">📋</span>
+                <span class="app-tab-label">My Requests</span>
+              </div>
+              <div class="app-tab">
+                <div class="app-tab-plus">+</div>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">🔔</span>
+                <span class="app-tab-label">Notices</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">👤</span>
+                <span class="app-tab-label">Profile</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right floating card -->
+        <div class="phone-card card-right">
+          <div class="pc-label">Certificates Issued</div>
+          <div class="pc-value">1,240</div>
+          <div class="pc-tag" style="color:#3b82f6">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Online, paperless
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRUST BAR ── -->
+<div class="trust">
+  <span class="trust-label">Trusted for —</span>
+  <div class="trust-item">🏛️ Gram Panchayat Operations</div>
+  <div class="trust-item">📱 Android 5.0+</div>
+  <div class="trust-item">🔐 OTP Secured Login</div>
+  <div class="trust-item">🌐 Marathi · Hindi · English</div>
+  <div class="trust-item">🆓 Free for Citizens</div>
+</div>
+
+<!-- ── FEATURES ── -->
+<section class="section features-bg" id="features">
+  <div class="section-inner">
+    <div class="section-eyebrow">✦ Features</div>
+    <h2>Everything your village needs,<br>in one app</h2>
+    <p class="section-desc">From filing a road complaint to downloading a birth certificate — Smart Panchayat handles it all without a single office visit.</p>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon fi-red">📋</div>
+        <h3>File & Track Complaints</h3>
+        <p>Report road damage, broken streetlights, or water supply issues. Attach a photo, auto-tag your location, and track resolution in real time with a reference number.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-blue">📄</div>
+        <h3>Digital Certificates</h3>
+        <p>Apply online for Birth, Death, Income and Residence certificates. Download verified PDFs directly to your phone. No queues, no paperwork, no bribes.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-teal">💧</div>
+        <h3>Water Bill Payments</h3>
+        <p>View outstanding dues, pay online in seconds, and get an instant digital receipt. All your billing history in one transparent place.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-orange">📢</div>
+        <h3>Village Notices</h3>
+        <p>Receive Gram Sabha announcements, government scheme updates, water supply alerts, and panchayat decisions the moment they are published.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-green">🏛️</div>
+        <h3>Government Schemes</h3>
+        <p>Browse 20+ central and state schemes — PM Kisan, PMAY, Ayushman Bharat, MGNREGA and more. Check eligibility and apply with step-by-step guidance.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-purple">🤖</div>
+        <h3>AI Help Assistant</h3>
+        <p>Ask questions in Marathi or Hindi and get instant answers about complaint status, required documents, and scheme eligibility — available 24 × 7.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="section hiw-bg" id="how-it-works">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-eyebrow">✦ How It Works</div>
+    <h2>Up and running in 3 steps</h2>
+    <p class="section-desc" style="margin:0 auto 56px">No paperwork. No passwords. Just your mobile number.</p>
+    <div class="hiw-steps">
+      <div class="hiw-step">
+        <div class="step-num">1</div>
+        <h3>Enter your mobile</h3>
+        <p>Login with your Indian mobile number. Verify with a 6-digit OTP. No account creation, no password to remember.</p>
+      </div>
+      <div class="hiw-step">
+        <div class="step-num">2</div>
+        <h3>Select your village</h3>
+        <p>Pick your Gram Panchayat from the list. The app loads your village's officers, notices, and history automatically.</p>
+      </div>
+      <div class="hiw-step">
+        <div class="step-num">3</div>
+        <h3>Use all services</h3>
+        <p>File complaints, apply for certificates, pay bills, and read notices — all for free, in your language.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOR WHOM ── -->
+<section class="section" id="for-whom">
+  <div class="section-inner">
+    <div class="section-eyebrow">✦ Who It's For</div>
+    <h2>Built for citizens.<br>Powerful for officers.</h2>
+    <p class="section-desc">Two distinct experiences in one app — every role in the village ecosystem gets what they need.</p>
+    <div class="whom-grid">
+      <div class="whom-card citizens">
+        <span class="whom-icon">👨‍🌾</span>
+        <h3>Citizens</h3>
+        <p>Every resident can access panchayat services from anywhere, anytime — completely free.</p>
+        <ul class="whom-list">
+          <li>File and track civic complaints</li>
+          <li>Apply & download certificates online</li>
+          <li>Pay water bills, get digital receipts</li>
+          <li>Read village notices & scheme info</li>
+          <li>Get AI-assisted help in your language</li>
+        </ul>
+      </div>
+      <div class="whom-card officers">
+        <span class="whom-icon">🏛️</span>
+        <h3>Panchayat Officers</h3>
+        <p>Officers get a powerful dashboard to manage complaints, issue certificates, and publish notices.</p>
+        <ul class="whom-list">
+          <li>Manage and update complaint statuses</li>
+          <li>Process certificate applications</li>
+          <li>Publish official notices & alerts</li>
+          <li>View village-level analytics</li>
+          <li>Manage water billing records</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DOWNLOAD ── -->
+<section class="download-section" id="download">
+  <div style="position:relative;z-index:2">
+    <h2>Download Smart Panchayat</h2>
+    <p>Free for every citizen. Available now on Android.</p>
+    <div class="download-btns">
+      <!-- Google Play -->
+      <a href="https://play.google.com/store/apps/details?id=com.nexbuild.smartpanchayat"
+         class="dl-btn" target="_blank" rel="noopener">
+        <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+fill="currentColor" viewBox="0 0 24 24" >
+<!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
+<path d="m12.954 11.616 2.957-2.957L6.36 3.291c-.633-.342-1.226-.39-1.746-.016zm3.461 3.462 3.074-1.729c.6-.336.929-.812.929-1.34 0-.527-.329-1.004-.928-1.34l-2.783-1.563-3.133 3.132zM4.1 4.002c-.064.197-.1.417-.1.658v14.705c0 .381.084.709.236.97l8.097-8.098zm8.854 8.855L4.902 20.91q.232.09.495.09.47 0 .968-.276l9.255-5.197z"/>
+</svg>
+        <div class="dl-btn-text">
+          <small>Get it on</small>
+          <strong>Google Play</strong>
+        </div>
+      </a>
+      <!-- App Store (coming soon) -->
+      <div class="dl-btn soon" title="Coming soon on iOS">
+        <!-- <svg width="26" height="26" viewBox="0 0 814 1000" fill="rgba(255,255,255,0.5)"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.2-150.3-109.9C62.1 725.5 22 566.1 22 429.3c0-237.6 155.5-363.4 307.4-363.4 79.4 0 145.5 52.1 194.7 52.1 47.2 0 121.7-55 217.2-55 34.8 0 139.4 3.2 211.5 99.7zm-184.5-170.2c38.8-46.2 66.6-110.9 66.6-175.6 0-9-1.3-18.1-2.6-27.1-62.8 2.6-136.8 42.8-181 100.2-34.5 40.8-69.6 106.2-69.6 172.2 0 10.3 1.9 20.6 2.6 23.8 3.9.6 9.7 1.3 15.5 1.3 56.1 0 122.6-38.2 168.5-94.8z"/></svg> -->
+        <div class="dl-btn-text">
+          <small>Coming soon on</small>
+          <strong>App Store</strong>
+        </div>
+      </div>
+    </div>
+    <div class="made-in">
+      <span>🇮🇳 Proudly Made in India</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="./index.html" class="nav-logo">
+        <div class="nav-logo-img">
+          <img src="./logo.png" alt="Smart Panchayat"
+            onerror="this.outerHTML='<span style=\'font-size:28px\'>🌾</span>'">
+        </div>
+        <span class="nav-brand" style="color:#fff">Smart<em style="color:#81c784">Panchayat</em></span>
+      </a>
+      <p>Digital governance platform connecting citizens with their Gram Panchayat. Simple, transparent, and accessible for every Indian village.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#download">Download App</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="mailto:support@smartpanchayat.in">support@smartpanchayat.in</a>
+      <a href="mailto:privacy@smartpanchayat.in">privacy@smartpanchayat.in</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Smart Panchayat. Built by <strong style="color:rgba(255,255,255,0.7)">NexBuild</strong>. All rights reserved.</span>
+    <span>
+      <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html">Terms</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
