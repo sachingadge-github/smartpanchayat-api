@@ -1,0 +1,320 @@
+{
+  "info": {
+    "_postman_id": "smart-panchayat-api-v1",
+    "name": "Smart Panchayat API — NexBuild",
+    "description": "Complete API collection for Smart Panchayat. Set {{base_url}} to http://localhost:5000 to get started. Run Auth/Send OTP → Auth/Verify OTP → copy accessToken into the collection variable.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",     "value": "http://localhost:5000",  "type": "string" },
+    { "key": "api",          "value": "{{base_url}}/api/v1",    "type": "string" },
+    { "key": "accessToken",  "value": "",                        "type": "string" },
+    { "key": "refreshToken", "value": "",                        "type": "string" },
+    { "key": "mobile",       "value": "9876543210",              "type": "string" },
+    { "key": "otp",          "value": "123456",                  "type": "string" },
+    { "key": "panchayat_id", "value": "1",                       "type": "string" },
+    { "key": "complaint_id", "value": "1",                       "type": "string" },
+    { "key": "cert_id",      "value": "1",                       "type": "string" },
+    { "key": "bill_id",      "value": "1",                       "type": "string" },
+    { "key": "notice_id",    "value": "1",                       "type": "string" },
+    { "key": "scheme_id",    "value": "1",                       "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "🏥 Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": { "method": "GET", "url": "{{base_url}}/health" }
+        }
+      ]
+    },
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Send OTP",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const r = pm.response.json();",
+            "if (r.data && r.data.otp) pm.collectionVariables.set('otp', r.data.otp);",
+            "pm.test('Status 200', () => pm.response.to.have.status(200));"
+          ] } }],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"mobile\": \"{{mobile}}\"\n}" },
+            "url": "{{api}}/auth/send-otp"
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const r = pm.response.json();",
+            "if (r.data) {",
+            "  pm.collectionVariables.set('accessToken', r.data.accessToken);",
+            "  pm.collectionVariables.set('refreshToken', r.data.refreshToken);",
+            "}",
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Has accessToken', () => pm.expect(r.data.accessToken).to.be.a('string'));"
+          ] } }],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"mobile\": \"{{mobile}}\",\n  \"otp\": \"{{otp}}\"\n}" },
+            "url": "{{api}}/auth/verify-otp"
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" },
+            "url": "{{api}}/auth/refresh"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{api}}/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Citizen",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": { "method": "GET", "url": "{{api}}/citizen/profile" }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Sachin Gadge\",\n  \"gender\": \"male\",\n  \"age\": 30,\n  \"address\": \"At Post Nerle, Tal Valva, Dist Sangli\",\n  \"panchayat_id\": {{panchayat_id}}\n}" },
+            "url": "{{api}}/citizen/profile"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏛️ Panchayats",
+      "item": [
+        {
+          "name": "List Panchayats",
+          "request": { "method": "GET", "url": { "raw": "{{api}}/panchayats?page=1&limit=10", "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "10" }, { "key": "search", "value": "", "disabled": true }, { "key": "district", "value": "Sangli", "disabled": true }] } }
+        },
+        {
+          "name": "Get Panchayat by ID",
+          "request": { "method": "GET", "url": "{{api}}/panchayats/{{panchayat_id}}" }
+        },
+        {
+          "name": "Get Panchayat Stats",
+          "request": { "method": "GET", "url": "{{api}}/panchayats/{{panchayat_id}}/stats" }
+        }
+      ]
+    },
+    {
+      "name": "📋 Complaints",
+      "item": [
+        {
+          "name": "File Complaint",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const r = pm.response.json();",
+            "if (r.data) pm.collectionVariables.set('complaint_id', r.data.id);",
+            "pm.test('Status 201', () => pm.response.to.have.status(201));"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"panchayat_id\": {{panchayat_id}},\n  \"category\": \"road\",\n  \"description\": \"Large pothole near primary school gate causing accidents to vehicles and pedestrians\",\n  \"location\": \"Near Primary School, Nerle\",\n  \"latitude\": 17.0282,\n  \"longitude\": 74.2754\n}" },
+            "url": "{{api}}/complaints"
+          }
+        },
+        {
+          "name": "My Complaints",
+          "request": { "method": "GET", "url": { "raw": "{{api}}/complaints/mine?page=1&limit=10", "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "10" }, { "key": "status", "value": "open", "disabled": true }] } }
+        },
+        {
+          "name": "Get Complaint by ID",
+          "request": { "method": "GET", "url": "{{api}}/complaints/{{complaint_id}}" }
+        },
+        {
+          "name": "Panchayat Complaints (Officer)",
+          "request": { "method": "GET", "url": { "raw": "{{api}}/complaints/panchayat/{{panchayat_id}}?status=open", "query": [{ "key": "status", "value": "open" }] } }
+        },
+        {
+          "name": "Update Complaint Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"resolved\",\n  \"remark\": \"Road repaired by PWD team on July 10\"\n}" },
+            "url": "{{api}}/complaints/{{complaint_id}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📄 Certificates",
+      "item": [
+        {
+          "name": "Apply — Birth Certificate",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const r = pm.response.json();",
+            "if (r.data) pm.collectionVariables.set('cert_id', r.data.id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"panchayat_id\": {{panchayat_id}},\n  \"type\": \"birth\",\n  \"applicant_name\": \"Arjun Sachin Gadge\",\n  \"details\": {\n    \"date_of_birth\": \"2020-05-15\",\n    \"place_of_birth\": \"Nerle\",\n    \"father_name\": \"Sachin Gadge\",\n    \"mother_name\": \"Priya Gadge\"\n  }\n}" },
+            "url": "{{api}}/certificates"
+          }
+        },
+        {
+          "name": "Apply — Residence Certificate",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"panchayat_id\": {{panchayat_id}},\n  \"type\": \"residence\",\n  \"applicant_name\": \"Sachin Gadge\",\n  \"details\": {\n    \"since_year\": \"2005\",\n    \"purpose\": \"Job application\"\n  }\n}" },
+            "url": "{{api}}/certificates"
+          }
+        },
+        {
+          "name": "My Certificates",
+          "request": { "method": "GET", "url": "{{api}}/certificates/mine" }
+        },
+        {
+          "name": "Get Certificate by ID",
+          "request": { "method": "GET", "url": "{{api}}/certificates/{{cert_id}}" }
+        },
+        {
+          "name": "Update Certificate Status (Officer)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"ready\",\n  \"pdf_url\": \"https://storage.example.com/certs/CERT-BIR-123456.pdf\",\n  \"remark\": \"Certificate verified and issued\"\n}" },
+            "url": "{{api}}/certificates/{{cert_id}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "💧 Water Bills",
+      "item": [
+        {
+          "name": "Get My Dues",
+          "request": { "method": "GET", "url": "{{api}}/water-bills/dues" }
+        },
+        {
+          "name": "Initiate Payment",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const r = pm.response.json();",
+            "if (r.data) pm.collectionVariables.set('bill_id', r.data.bill_id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "url": "{{api}}/water-bills/{{bill_id}}/pay/init"
+          }
+        },
+        {
+          "name": "Confirm Payment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"payment_ref\": \"pay_mock_ref_123456\"\n}" },
+            "url": "{{api}}/water-bills/{{bill_id}}/pay/confirm"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📢 Notices",
+      "item": [
+        {
+          "name": "List Notices",
+          "request": { "method": "GET", "url": { "raw": "{{api}}/notices?panchayat_id={{panchayat_id}}&page=1", "query": [{ "key": "panchayat_id", "value": "{{panchayat_id}}" }, { "key": "page", "value": "1" }, { "key": "type", "value": "meeting", "disabled": true }] } }
+        },
+        {
+          "name": "Get Notice by ID",
+          "request": { "method": "GET", "url": "{{api}}/notices/{{notice_id}}" }
+        },
+        {
+          "name": "Publish Notice",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const r = pm.response.json();",
+            "if (r.data) pm.collectionVariables.set('notice_id', r.data.id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"panchayat_id\": {{panchayat_id}},\n  \"title\": \"Gram Sabha Meeting — July 15, 2026\",\n  \"body\": \"All citizens are invited to attend the Gram Sabha at Panchayat Bhavan on July 15, 2026 at 10:00 AM.\",\n  \"type\": \"meeting\"\n}" },
+            "url": "{{api}}/notices"
+          }
+        },
+        {
+          "name": "Delete Notice",
+          "request": { "method": "DELETE", "url": "{{api}}/notices/{{notice_id}}" }
+        }
+      ]
+    },
+    {
+      "name": "🏛️ Schemes",
+      "item": [
+        {
+          "name": "List Schemes",
+          "request": { "method": "GET", "url": { "raw": "{{api}}/schemes?page=1&limit=10", "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "10" }, { "key": "category", "value": "agriculture", "disabled": true }, { "key": "search", "value": "kisan", "disabled": true }] } }
+        },
+        {
+          "name": "Get Scheme by ID",
+          "request": { "method": "GET", "url": "{{api}}/schemes/{{scheme_id}}" }
+        }
+      ]
+    },
+    {
+      "name": "📎 Upload",
+      "item": [
+        {
+          "name": "Upload File",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "formdata", "formdata": [{ "key": "file", "type": "file", "src": [] }] },
+            "url": "{{api}}/upload"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔔 Notifications",
+      "item": [
+        {
+          "name": "Register Device Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"fcm_device_token_example_abc123\",\n  \"platform\": \"android\"\n}" },
+            "url": "{{api}}/notifications/register"
+          }
+        },
+        {
+          "name": "Unregister Device Token",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"fcm_device_token_example_abc123\"\n}" },
+            "url": "{{api}}/notifications/unregister"
+          }
+        }
+      ]
+    }
+  ]
+}
