@@ -27,13 +27,13 @@ module.exports = {
       // Development environment
       env: {
         NODE_ENV: 'development',
-        PORT: 5000,
+        PORT: 4002,
       },
 
       // Production environment — pm2 start ecosystem.config.js --env production
       env_production: {
         NODE_ENV: 'production',
-        PORT: 5000,
+        PORT: 4002,
         instances: 'max',
       },
     },
