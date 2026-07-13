@@ -55,8 +55,8 @@ const listMine = async (citizenId, { status, type, page = 1, limit = 10 }) => {
     const [rows] = await pool.execute(
       `SELECT c.*, p.name as panchayat_name FROM certificates c
        JOIN panchayats p ON c.panchayat_id = p.id
-       ${where} ORDER BY c.created_at DESC LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
+       ${where} ORDER BY c.created_at DESC LIMIT ${limit} OFFSET ${offset}`,
+      params
     );
     const [[{ total }]] = await pool.execute(`SELECT COUNT(*) as total FROM certificates c ${where}`, params);
     logger.debug('listMine result', { citizenId, total, returned: rows.length });

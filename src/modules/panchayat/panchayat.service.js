@@ -12,7 +12,7 @@ const getAll = async ({ search, district, taluka, page = 1, limit = 20 }) => {
   if (taluka)   { where += ' AND taluka = ?';     params.push(taluka); }
   const offset = (page - 1) * limit;
   try {
-    const [rows] = await pool.execute(`SELECT * FROM panchayats ${where} ORDER BY name LIMIT ? OFFSET ?`, [...params, limit, offset]);
+    const [rows] = await pool.execute(`SELECT * FROM panchayats ${where} ORDER BY name LIMIT ${limit} OFFSET ${offset}`, params);
     const [[{ total }]] = await pool.execute(`SELECT COUNT(*) as total FROM panchayats ${where}`, params);
     logger.debug('getAll result', { total, returned: rows.length });
     return { rows, total, page, limit, pages: Math.ceil(total / limit) };

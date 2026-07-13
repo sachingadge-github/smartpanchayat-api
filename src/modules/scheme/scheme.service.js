@@ -12,8 +12,8 @@ const list = async ({ category, search, page = 1, limit = 10 }) => {
   const offset = (page - 1) * limit;
   try {
     const [rows] = await pool.execute(
-      `SELECT * FROM schemes ${where} ORDER BY name LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
+      `SELECT * FROM schemes ${where} ORDER BY name LIMIT ${limit} OFFSET ${offset}`,
+      params
     );
     const [[{ total }]] = await pool.execute(`SELECT COUNT(*) as total FROM schemes ${where}`, params);
     logger.debug('list result', { total, returned: rows.length });

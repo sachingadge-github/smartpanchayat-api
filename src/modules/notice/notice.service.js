@@ -46,8 +46,8 @@ const list = async ({ panchayat_id, type, page = 1, limit = 10 }) => {
     const [rows] = await pool.execute(
       `SELECT n.*, p.name as panchayat_name FROM notices n
        JOIN panchayats p ON n.panchayat_id = p.id
-       ${where} ORDER BY n.created_at DESC LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
+       ${where} ORDER BY n.created_at DESC LIMIT ${limit} OFFSET ${offset}`,
+      params
     );
     const [[{ total }]] = await pool.execute(`SELECT COUNT(*) as total FROM notices n ${where}`, params);
     logger.debug('list result', { panchayat_id, total, returned: rows.length });

@@ -42,20 +42,20 @@ const getById = async (id) => {
 };
 
 const listMine = async (citizenId, { status, category, page = 1, limit = 10 }) => {
-  page  = parseInt(page, 10);
-  limit = parseInt(limit, 10);
-  logger.debug('listMine', { citizenId, status, category, page, limit });
+  page   = parseInt(page, 10);
+  limit  = parseInt(limit, 10);
+  const offset = (page - 1) * limit;
+  logger.debug('listMine', { citizenId, status, category, page, limit, offset });
   let where = 'WHERE c.citizen_id = ?';
   const params = [citizenId];
   if (status)   { where += ' AND c.status = ?';   params.push(status); }
   if (category) { where += ' AND c.category = ?'; params.push(category); }
-  const offset = (page - 1) * limit;
   try {
     const [rows] = await pool.execute(
       `SELECT c.*, p.name as panchayat_name FROM complaints c
        JOIN panchayats p ON c.panchayat_id = p.id
-       ${where} ORDER BY c.created_at DESC LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
+       ${where} ORDER BY c.created_at DESC LIMIT ${limit} OFFSET ${offset}`,
+      params
     );
     const [[{ total }]] = await pool.execute(`SELECT COUNT(*) as total FROM complaints c ${where}`, params);
     logger.debug('listMine result', { citizenId, total, returned: rows.length });
@@ -68,20 +68,20 @@ const listMine = async (citizenId, { status, category, page = 1, limit = 10 }) =
 
 const listByPanchayat = async (panchayatId, { status, category, page = 1, limit = 10 }) => {
   panchayatId = parseInt(panchayatId, 10);
-  page  = parseInt(page, 10);
-  limit = parseInt(limit, 10);
-  logger.debug('listByPanchayat', { panchayatId, status, category, page, limit });
+  page   = parseInt(page, 10);
+  limit  = parseInt(limit, 10);
+  const offset = (page - 1) * limit;
+  logger.debug('listByPanchayat', { panchayatId, status, category, page, limit, offset });
   let where = 'WHERE c.panchayat_id = ?';
   const params = [panchayatId];
   if (status)   { where += ' AND c.status = ?';   params.push(status); }
   if (category) { where += ' AND c.category = ?'; params.push(category); }
-  const offset = (page - 1) * limit;
   try {
     const [rows] = await pool.execute(
       `SELECT c.*, ci.name as citizen_name FROM complaints c
        JOIN citizens ci ON c.citizen_id = ci.id
-       ${where} ORDER BY c.created_at DESC LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
+       ${where} ORDER BY c.created_at DESC LIMIT ${limit} OFFSET ${offset}`,
+      params
     );
     const [[{ total }]] = await pool.execute(`SELECT COUNT(*) as total FROM complaints c ${where}`, params);
     logger.debug('listByPanchayat result', { panchayatId, total, returned: rows.length });
