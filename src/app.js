@@ -1,14 +1,15 @@
 require('dotenv').config();
-const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
-const morgan = require('morgan');
-const path = require('path');
+const express  = require('express');
+const helmet   = require('helmet');
+const cors     = require('cors');
+const morgan   = require('morgan');
+const path     = require('path');
 const rateLimit = require('express-rate-limit');
 const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs');
+const YAML     = require('yamljs');
 
-const env = require('./config/env');
+const env    = require('./config/env');
+const logger = require('./utils/logger')('app');
 const { testConnection } = require('./config/database');
 const { errorHandler, notFound } = require('./middleware/error.middleware');
 
@@ -19,7 +20,27 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
+
+// HTTP request logging — write to morgan stream and our logger file
+const morganFormat = env.nodeEnv === 'production' ? 'combined' : 'dev';
+app.use(morgan(morganFormat, {
+  stream: { write: (msg) => logger.info(msg.trim()) },
+}));
+
+// Log each request with user context after auth (best-effort)
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const ms  = Date.now() - start;
+    const lvl = res.statusCode >= 500 ? 'error' : res.statusCode >= 400 ? 'warn' : 'debug';
+    logger[lvl](`${req.method} ${req.originalUrl} ${res.statusCode} ${ms}ms`, {
+      ip:     req.ip,
+      userId: req.user?.id || null,
+      query:  Object.keys(req.query).length ? req.query : undefined,
+    });
+  });
+  next();
+});
 
 // Static uploads
 app.use('/uploads', express.static(path.resolve(env.upload.dir)));
@@ -63,9 +84,9 @@ app.use(errorHandler);
 const PORT = env.port;
 app.listen(PORT, async () => {
   await testConnection();
-  console.log(`🚀 ${env.app.name} API running on http://localhost:${PORT}`);
-  console.log(`📋 Swagger: http://localhost:${PORT}/api-docs`);
-  console.log(`🌍 Mode: ${env.nodeEnv}`);
+  logger.info(`${env.app.name} API running on http://localhost:${PORT}`);
+  logger.info(`Swagger docs: http://localhost:${PORT}/api-docs`);
+  logger.info(`Mode: ${env.nodeEnv}`);
 });
 
 module.exports = app;
