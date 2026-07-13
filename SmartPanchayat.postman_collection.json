@@ -2,22 +2,22 @@
   "info": {
     "_postman_id": "smart-panchayat-api-v1",
     "name": "Smart Panchayat API — NexBuild",
-    "description": "Complete API collection for Smart Panchayat. Set {{base_url}} to http://localhost:5000 to get started. Run Auth/Send OTP → Auth/Verify OTP → copy accessToken into the collection variable.",
+    "description": "Complete API collection for Smart Panchayat. Set {{base_url}} to http://localhost:4002 to get started. Run Auth/Send OTP → Auth/Verify OTP → accessToken is auto-saved.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "base_url",     "value": "http://localhost:5000",  "type": "string" },
-    { "key": "api",          "value": "{{base_url}}/api/v1",    "type": "string" },
-    { "key": "accessToken",  "value": "",                        "type": "string" },
-    { "key": "refreshToken", "value": "",                        "type": "string" },
-    { "key": "mobile",       "value": "9876543210",              "type": "string" },
-    { "key": "otp",          "value": "123456",                  "type": "string" },
-    { "key": "panchayat_id", "value": "1",                       "type": "string" },
-    { "key": "complaint_id", "value": "1",                       "type": "string" },
-    { "key": "cert_id",      "value": "1",                       "type": "string" },
-    { "key": "bill_id",      "value": "1",                       "type": "string" },
-    { "key": "notice_id",    "value": "1",                       "type": "string" },
-    { "key": "scheme_id",    "value": "1",                       "type": "string" }
+    { "key": "base_url",     "value": "http://localhost:4002",         "type": "string" },
+    { "key": "api",          "value": "http://localhost:4002/api/v1",  "type": "string" },
+    { "key": "accessToken",  "value": "",                               "type": "string" },
+    { "key": "refreshToken", "value": "",                               "type": "string" },
+    { "key": "mobile",       "value": "9876543210",                    "type": "string" },
+    { "key": "otp",          "value": "123456",                         "type": "string" },
+    { "key": "panchayat_id", "value": "1",                             "type": "string" },
+    { "key": "complaint_id", "value": "1",                             "type": "string" },
+    { "key": "cert_id",      "value": "1",                             "type": "string" },
+    { "key": "bill_id",      "value": "1",                             "type": "string" },
+    { "key": "notice_id",    "value": "1",                             "type": "string" },
+    { "key": "scheme_id",    "value": "1",                             "type": "string" }
   ],
   "auth": {
     "type": "bearer",
