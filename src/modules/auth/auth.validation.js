@@ -8,4 +8,16 @@ const sendOtp = Joi.object({ mobile });
 const verifyOtp = Joi.object({ mobile, otp: Joi.string().length(6).required() });
 const refresh = Joi.object({ refreshToken: Joi.string().required() });
 
-module.exports = { sendOtp, verifyOtp, refresh };
+const register = Joi.object({
+  name:         Joi.string().min(2).max(100).required().messages({
+    'string.min': 'Name must be at least 2 characters',
+    'any.required': 'Name is required',
+  }),
+  mobile,
+  panchayat_id: Joi.number().integer().positive().required().messages({
+    'any.required': 'Panchayat ID is required',
+    'number.base':  'Panchayat ID must be a number',
+  }),
+});
+
+module.exports = { sendOtp, verifyOtp, refresh, register };

@@ -32,4 +32,11 @@ const refreshToken = async (req, res, next) => {
 
 const logout = (req, res) => R.success(res, 'Logged out successfully');
 
-module.exports = { sendOtp, verifyOtp, refreshToken, logout };
+const register = async (req, res, next) => {
+  try {
+    const result = await service.register(req.body);
+    return R.created(res, 'Registration successful', result);
+  } catch (e) { next(e); }
+};
+
+module.exports = { sendOtp, verifyOtp, refreshToken, logout, register };
