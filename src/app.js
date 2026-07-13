@@ -5,6 +5,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 
 const env = require('./config/env');
 const { testConnection } = require('./config/database');
@@ -21,6 +23,13 @@ app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
 
 // Static uploads
 app.use('/uploads', express.static(path.resolve(env.upload.dir)));
+
+// Swagger UI
+const swaggerDoc = YAML.load(path.resolve(__dirname, '../swagger.yaml'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc, {
+  customSiteTitle: 'Smart Panchayat API Docs',
+  swaggerOptions: { persistAuthorization: true },
+}));
 
 // Rate limiting
 app.use('/api/v1/auth', rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: 'Too many requests' }));
@@ -55,7 +64,7 @@ const PORT = env.port;
 app.listen(PORT, async () => {
   await testConnection();
   console.log(`🚀 ${env.app.name} API running on http://localhost:${PORT}`);
-  console.log(`📋 Docs: http://localhost:${PORT}/api/v1`);
+  console.log(`📋 Swagger: http://localhost:${PORT}/api-docs`);
   console.log(`🌍 Mode: ${env.nodeEnv}`);
 });
 

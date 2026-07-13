@@ -1,0 +1,1023 @@
+openapi: 3.0.3
+info:
+  title: Smart Panchayat API
+  description: |
+    REST API for Smart Panchayat — a digital governance platform for Gram Panchayats.
+    Developed by **NexBuild**.
+
+    ## Authentication
+    All protected endpoints require a Bearer token in the `Authorization` header.
+    Run **Send OTP → Verify OTP** to obtain an `accessToken`.
+
+    ## Standard Response Format
+    All responses follow the NexBuild standard:
+    ```json
+    {
+      "success": true,
+      "message": "Description",
+      "data": {},
+      "meta": { "timestamp": "2026-07-13T00:00:00Z", "version": "1.0.0" }
+    }
+    ```
+  version: 1.0.0
+  contact:
+    name: NexBuild Support
+    email: support@smartpanchayat.in
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local
+  - url: http://smartpanchayat.co.in/api
+    description: UAT
+
+tags:
+  - name: Health
+  - name: Auth
+  - name: Citizen
+  - name: Panchayats
+  - name: Complaints
+  - name: Certificates
+  - name: Water Bills
+  - name: Notices
+  - name: Schemes
+  - name: Upload
+  - name: Notifications
+
+# ─── SECURITY ───────────────────────────────────────────────
+securitySchemes: {}
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # ── Generic ──
+    Meta:
+      type: object
+      properties:
+        timestamp: { type: string, format: date-time }
+        version:   { type: string, example: "1.0.0" }
+
+    SuccessResponse:
+      type: object
+      properties:
+        success: { type: boolean, example: true }
+        message: { type: string }
+        data:    { type: object }
+        meta:    { $ref: '#/components/schemas/Meta' }
+
+    ErrorResponse:
+      type: object
+      properties:
+        success: { type: boolean, example: false }
+        message: { type: string }
+        error:   { type: string }
+        meta:    { $ref: '#/components/schemas/Meta' }
+
+    PaginationMeta:
+      type: object
+      properties:
+        timestamp: { type: string, format: date-time }
+        version:   { type: string }
+        pagination:
+          type: object
+          properties:
+            page:        { type: integer }
+            limit:       { type: integer }
+            total:       { type: integer }
+            total_pages: { type: integer }
+
+    # ── Auth ──
+    SendOtpRequest:
+      type: object
+      required: [mobile]
+      properties:
+        mobile:
+          type: string
+          pattern: '^[6-9]\d{9}$'
+          example: "9876543210"
+
+    VerifyOtpRequest:
+      type: object
+      required: [mobile, otp]
+      properties:
+        mobile: { type: string, example: "9876543210" }
+        otp:    { type: string, example: "123456" }
+
+    AuthTokens:
+      type: object
+      properties:
+        accessToken:  { type: string }
+        refreshToken: { type: string }
+        citizen:
+          type: object
+          properties:
+            id:     { type: integer }
+            mobile: { type: string }
+            name:   { type: string, nullable: true }
+            role:   { type: string, enum: [citizen, officer, admin] }
+            is_new: { type: boolean }
+
+    RefreshRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken: { type: string }
+
+    # ── Citizen ──
+    CitizenProfile:
+      type: object
+      properties:
+        id:           { type: integer }
+        mobile:       { type: string }
+        name:         { type: string, nullable: true }
+        gender:       { type: string, enum: [male, female, other], nullable: true }
+        age:          { type: integer, nullable: true }
+        address:      { type: string, nullable: true }
+        role:         { type: string, enum: [citizen, officer, admin] }
+        panchayat_id: { type: integer, nullable: true }
+        panchayat_name: { type: string, nullable: true }
+        created_at:   { type: string, format: date-time }
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        name:         { type: string, example: "Sachin Gadge" }
+        gender:       { type: string, enum: [male, female, other] }
+        age:          { type: integer, example: 30 }
+        address:      { type: string, example: "At Post Nerle, Tal Valva, Dist Sangli" }
+        panchayat_id: { type: integer, example: 1 }
+
+    # ── Panchayat ──
+    Panchayat:
+      type: object
+      properties:
+        id:       { type: integer }
+        name:     { type: string }
+        district: { type: string }
+        taluka:   { type: string }
+        state:    { type: string }
+        pin_code: { type: string }
+        citizen_count:    { type: integer }
+        open_complaints:  { type: integer }
+
+    # ── Complaint ──
+    Complaint:
+      type: object
+      properties:
+        id:           { type: integer }
+        reference_no: { type: string, example: "CMP-241012" }
+        panchayat_id: { type: integer }
+        citizen_id:   { type: integer }
+        category:
+          type: string
+          enum: [road, water, electricity, sanitation, drainage, streetlight, other]
+        description:  { type: string }
+        location:     { type: string }
+        latitude:     { type: number, nullable: true }
+        longitude:    { type: number, nullable: true }
+        status:
+          type: string
+          enum: [open, in_progress, resolved, closed]
+        remark:       { type: string, nullable: true }
+        photo_url:    { type: string, nullable: true }
+        created_at:   { type: string, format: date-time }
+        updated_at:   { type: string, format: date-time }
+
+    FileComplaintRequest:
+      type: object
+      required: [panchayat_id, category, description, location]
+      properties:
+        panchayat_id: { type: integer, example: 1 }
+        category:
+          type: string
+          enum: [road, water, electricity, sanitation, drainage, streetlight, other]
+          example: road
+        description:
+          type: string
+          example: "Large pothole near primary school gate causing accidents"
+        location:     { type: string, example: "Near Primary School, Nerle" }
+        latitude:     { type: number, example: 17.0282 }
+        longitude:    { type: number, example: 74.2754 }
+        photo_url:    { type: string, example: "/uploads/photo.jpg" }
+
+    UpdateComplaintStatusRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [open, in_progress, resolved, closed]
+          example: resolved
+        remark: { type: string, example: "Road repaired by PWD team on July 10" }
+
+    # ── Certificate ──
+    Certificate:
+      type: object
+      properties:
+        id:             { type: integer }
+        reference_no:   { type: string, example: "CERT-BIR-241012" }
+        panchayat_id:   { type: integer }
+        citizen_id:     { type: integer }
+        type:
+          type: string
+          enum: [birth, death, income, residence]
+        applicant_name: { type: string }
+        details:        { type: object }
+        status:
+          type: string
+          enum: [pending, processing, ready, rejected]
+        pdf_url:        { type: string, nullable: true }
+        remark:         { type: string, nullable: true }
+        created_at:     { type: string, format: date-time }
+
+    ApplyCertificateRequest:
+      type: object
+      required: [panchayat_id, type, applicant_name, details]
+      properties:
+        panchayat_id:   { type: integer, example: 1 }
+        type:
+          type: string
+          enum: [birth, death, income, residence]
+          example: birth
+        applicant_name: { type: string, example: "Arjun Sachin Gadge" }
+        details:
+          type: object
+          example:
+            date_of_birth: "2020-05-15"
+            place_of_birth: "Nerle"
+            father_name: "Sachin Gadge"
+            mother_name: "Priya Gadge"
+
+    UpdateCertificateStatusRequest:
+      type: object
+      required: [status]
+      properties:
+        status:  { type: string, enum: [pending, processing, ready, rejected] }
+        pdf_url: { type: string, example: "https://storage.example.com/certs/CERT-BIR-123.pdf" }
+        remark:  { type: string, example: "Certificate verified and issued" }
+
+    # ── Water Bill ──
+    WaterBill:
+      type: object
+      properties:
+        id:           { type: integer }
+        citizen_id:   { type: integer }
+        panchayat_id: { type: integer }
+        bill_month:   { type: string, example: "2026-06" }
+        amount:       { type: number, example: 150.00 }
+        paid:         { type: boolean }
+        receipt_no:   { type: string, nullable: true }
+        paid_at:      { type: string, format: date-time, nullable: true }
+
+    # ── Notice ──
+    Notice:
+      type: object
+      properties:
+        id:           { type: integer }
+        panchayat_id: { type: integer }
+        title:        { type: string }
+        body:         { type: string }
+        type:
+          type: string
+          enum: [general, meeting, scheme, water, alert]
+        created_by:   { type: integer }
+        created_at:   { type: string, format: date-time }
+
+    PublishNoticeRequest:
+      type: object
+      required: [panchayat_id, title, body, type]
+      properties:
+        panchayat_id: { type: integer, example: 1 }
+        title:        { type: string, example: "Gram Sabha Meeting — July 15, 2026" }
+        body:         { type: string, example: "All citizens are invited to attend the Gram Sabha at Panchayat Bhavan on July 15, 2026 at 10:00 AM." }
+        type:         { type: string, enum: [general, meeting, scheme, water, alert], example: meeting }
+
+    # ── Scheme ──
+    Scheme:
+      type: object
+      properties:
+        id:           { type: integer }
+        name:         { type: string }
+        description:  { type: string }
+        category:     { type: string }
+        eligibility:  { type: string }
+        benefits:     { type: string }
+        apply_url:    { type: string, nullable: true }
+        is_active:    { type: boolean }
+
+# ─── PATHS ──────────────────────────────────────────────────
+paths:
+
+  # ── HEALTH ──
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      security: []
+      responses:
+        '200':
+          description: Server is running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:  { type: string, example: ok }
+                  uptime:  { type: number }
+                  version: { type: string }
+
+  # ── AUTH ──
+  /auth/send-otp:
+    post:
+      tags: [Auth]
+      summary: Send OTP to mobile number
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SendOtpRequest' }
+      responses:
+        '200':
+          description: OTP sent (returned in response in mock mode)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          mobile: { type: string }
+                          otp:    { type: string, description: "Only present when MOCK_OTP=true" }
+        '400':
+          description: Invalid mobile number
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+
+  /auth/verify-otp:
+    post:
+      tags: [Auth]
+      summary: Verify OTP and get tokens
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/VerifyOtpRequest' }
+      responses:
+        '200':
+          description: Login successful — tokens returned
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AuthTokens' }
+        '400':
+          description: Invalid or expired OTP
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RefreshRequest' }
+      responses:
+        '200':
+          description: New access token
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          accessToken: { type: string }
+        '401':
+          description: Invalid refresh token
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout (stateless — clears client token)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logged out
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessResponse' }
+
+  # ── CITIZEN ──
+  /citizen/profile:
+    get:
+      tags: [Citizen]
+      summary: Get logged-in citizen profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Citizen profile
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/CitizenProfile' }
+        '401':
+          description: Unauthorized
+
+    put:
+      tags: [Citizen]
+      summary: Update citizen profile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateProfileRequest' }
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/CitizenProfile' }
+
+  # ── PANCHAYATS ──
+  /panchayats:
+    get:
+      tags: [Panchayats]
+      summary: List panchayats (public)
+      security: []
+      parameters:
+        - { name: page,     in: query, schema: { type: integer, default: 1 } }
+        - { name: limit,    in: query, schema: { type: integer, default: 10 } }
+        - { name: search,   in: query, schema: { type: string }, description: "Search by name" }
+        - { name: district, in: query, schema: { type: string }, example: "Sangli" }
+        - { name: taluka,   in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: Paginated list of panchayats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Panchayat' }
+                  meta: { $ref: '#/components/schemas/PaginationMeta' }
+
+  /panchayats/{id}:
+    get:
+      tags: [Panchayats]
+      summary: Get panchayat by ID (public)
+      security: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: Panchayat detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Panchayat' }
+        '404':
+          description: Panchayat not found
+
+  /panchayats/{id}/stats:
+    get:
+      tags: [Panchayats]
+      summary: Get panchayat statistics
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: Panchayat statistics
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          total_citizens:      { type: integer }
+                          total_complaints:    { type: integer }
+                          open_complaints:     { type: integer }
+                          resolved_complaints: { type: integer }
+                          total_certificates:  { type: integer }
+                          pending_certificates:{ type: integer }
+                          water_bill_collection: { type: number }
+
+  # ── COMPLAINTS ──
+  /complaints:
+    post:
+      tags: [Complaints]
+      summary: File a new complaint
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FileComplaintRequest' }
+      responses:
+        '201':
+          description: Complaint filed
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Complaint' }
+
+  /complaints/mine:
+    get:
+      tags: [Complaints]
+      summary: Get my complaints
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: page,     in: query, schema: { type: integer, default: 1 } }
+        - { name: limit,    in: query, schema: { type: integer, default: 10 } }
+        - { name: status,   in: query, schema: { type: string, enum: [open, in_progress, resolved, closed] } }
+        - { name: category, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: My complaints list
+
+  /complaints/{id}:
+    get:
+      tags: [Complaints]
+      summary: Get complaint by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: Complaint detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Complaint' }
+        '404':
+          description: Not found
+
+  /complaints/panchayat/{panchayatId}:
+    get:
+      tags: [Complaints]
+      summary: List complaints for a panchayat (Officer)
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: panchayatId, in: path, required: true, schema: { type: integer } }
+        - { name: status,      in: query, schema: { type: string, enum: [open, in_progress, resolved, closed] } }
+        - { name: category,    in: query, schema: { type: string } }
+        - { name: page,        in: query, schema: { type: integer, default: 1 } }
+        - { name: limit,       in: query, schema: { type: integer, default: 20 } }
+      responses:
+        '200':
+          description: Complaints list for panchayat
+
+  /complaints/{id}/status:
+    patch:
+      tags: [Complaints]
+      summary: Update complaint status (Officer)
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateComplaintStatusRequest' }
+      responses:
+        '200':
+          description: Status updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Complaint' }
+        '403':
+          description: Not authorized (officer role required)
+
+  # ── CERTIFICATES ──
+  /certificates:
+    post:
+      tags: [Certificates]
+      summary: Apply for a certificate
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ApplyCertificateRequest' }
+            examples:
+              birth:
+                summary: Birth Certificate
+                value:
+                  panchayat_id: 1
+                  type: birth
+                  applicant_name: "Arjun Sachin Gadge"
+                  details:
+                    date_of_birth: "2020-05-15"
+                    place_of_birth: "Nerle"
+                    father_name: "Sachin Gadge"
+                    mother_name: "Priya Gadge"
+              residence:
+                summary: Residence Certificate
+                value:
+                  panchayat_id: 1
+                  type: residence
+                  applicant_name: "Sachin Gadge"
+                  details:
+                    since_year: "2005"
+                    purpose: "Job application"
+              income:
+                summary: Income Certificate
+                value:
+                  panchayat_id: 1
+                  type: income
+                  applicant_name: "Sachin Gadge"
+                  details:
+                    annual_income: 120000
+                    occupation: "Farmer"
+      responses:
+        '201':
+          description: Certificate application submitted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Certificate' }
+
+  /certificates/mine:
+    get:
+      tags: [Certificates]
+      summary: Get my certificate applications
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: page,   in: query, schema: { type: integer, default: 1 } }
+        - { name: limit,  in: query, schema: { type: integer, default: 10 } }
+        - { name: status, in: query, schema: { type: string, enum: [pending, processing, ready, rejected] } }
+        - { name: type,   in: query, schema: { type: string, enum: [birth, death, income, residence] } }
+      responses:
+        '200':
+          description: My certificates list
+
+  /certificates/{id}:
+    get:
+      tags: [Certificates]
+      summary: Get certificate by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: Certificate detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Certificate' }
+
+  /certificates/{id}/status:
+    patch:
+      tags: [Certificates]
+      summary: Update certificate status (Officer)
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateCertificateStatusRequest' }
+      responses:
+        '200':
+          description: Certificate status updated
+
+  # ── WATER BILLS ──
+  /water-bills/dues:
+    get:
+      tags: [Water Bills]
+      summary: Get my unpaid water bills
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Outstanding dues
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          bills:
+                            type: array
+                            items: { $ref: '#/components/schemas/WaterBill' }
+                          total_due: { type: number, example: 450.00 }
+
+  /water-bills/{id}/pay/init:
+    post:
+      tags: [Water Bills]
+      summary: Initiate bill payment
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: Payment initiated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          order_id: { type: string, example: "PAY-A1B2C3D4" }
+                          bill_id:  { type: integer }
+                          amount:   { type: number }
+
+  /water-bills/{id}/pay/confirm:
+    post:
+      tags: [Water Bills]
+      summary: Confirm payment after gateway success
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [payment_ref]
+              properties:
+                payment_ref: { type: string, example: "pay_mock_ref_123456" }
+      responses:
+        '200':
+          description: Payment confirmed, receipt issued
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          receipt_no:  { type: string, example: "RCP-2026001" }
+                          paid_at:     { type: string, format: date-time }
+                          amount:      { type: number }
+
+  # ── NOTICES ──
+  /notices:
+    get:
+      tags: [Notices]
+      summary: List notices (public)
+      security: []
+      parameters:
+        - { name: panchayat_id, in: query, required: true, schema: { type: integer } }
+        - { name: type,         in: query, schema: { type: string, enum: [general, meeting, scheme, water, alert] } }
+        - { name: page,         in: query, schema: { type: integer, default: 1 } }
+        - { name: limit,        in: query, schema: { type: integer, default: 20 } }
+      responses:
+        '200':
+          description: Notices list
+
+    post:
+      tags: [Notices]
+      summary: Publish a notice (Officer)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PublishNoticeRequest' }
+      responses:
+        '201':
+          description: Notice published
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Notice' }
+
+  /notices/{id}:
+    get:
+      tags: [Notices]
+      summary: Get notice by ID
+      security: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: Notice detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Notice' }
+
+    delete:
+      tags: [Notices]
+      summary: Delete notice (Officer)
+      security:
+        - BearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: Notice deleted
+
+  # ── SCHEMES ──
+  /schemes:
+    get:
+      tags: [Schemes]
+      summary: List government schemes (public)
+      security: []
+      parameters:
+        - { name: page,     in: query, schema: { type: integer, default: 1 } }
+        - { name: limit,    in: query, schema: { type: integer, default: 10 } }
+        - { name: category, in: query, schema: { type: string }, example: agriculture }
+        - { name: search,   in: query, schema: { type: string }, example: kisan }
+      responses:
+        '200':
+          description: Schemes list
+
+  /schemes/{id}:
+    get:
+      tags: [Schemes]
+      summary: Get scheme by ID (public)
+      security: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: Scheme detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Scheme' }
+
+  # ── UPLOAD ──
+  /upload:
+    post:
+      tags: [Upload]
+      summary: Upload a file (image or PDF)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: "JPG, PNG, WEBP or PDF — max 5MB"
+      responses:
+        '200':
+          description: File uploaded
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          filename: { type: string }
+                          url:      { type: string, example: "/uploads/1720000000-abc123.jpg" }
+                          size:     { type: integer }
+                          mimetype: { type: string }
+        '400':
+          description: Invalid file type or size exceeded
+
+  # ── NOTIFICATIONS ──
+  /notifications/register:
+    post:
+      tags: [Notifications]
+      summary: Register device FCM token for push notifications
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, platform]
+              properties:
+                token:    { type: string, example: "fcm_device_token_example_abc123" }
+                platform: { type: string, enum: [android, ios], example: android }
+      responses:
+        '200':
+          description: Token registered
+
+  /notifications/unregister:
+    delete:
+      tags: [Notifications]
+      summary: Unregister FCM token
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token: { type: string, example: "fcm_device_token_example_abc123" }
+      responses:
+        '200':
+          description: Token unregistered
