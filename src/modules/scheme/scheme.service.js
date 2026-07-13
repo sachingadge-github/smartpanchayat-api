@@ -1,6 +1,8 @@
 const { pool } = require('../../config/database');
 
 const list = async ({ category, search, page = 1, limit = 10 }) => {
+  page = parseInt(page, 10);
+  limit = parseInt(limit, 10);
   let where = 'WHERE 1=1';
   const params = [];
   if (category) { where += ' AND category = ?'; params.push(category); }

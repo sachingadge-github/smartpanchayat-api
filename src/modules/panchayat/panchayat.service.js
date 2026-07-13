@@ -1,6 +1,8 @@
 const { pool } = require('../../config/database');
 
 const getAll = async ({ search, district, taluka, page = 1, limit = 20 }) => {
+  page = parseInt(page, 10);
+  limit = parseInt(limit, 10);
   let where = 'WHERE 1=1';
   const params = [];
   if (search) { where += ' AND name LIKE ?'; params.push(`%${search}%`); }

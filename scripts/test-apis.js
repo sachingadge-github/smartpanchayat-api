@@ -13,7 +13,7 @@ const https = require('https');
 // ── CONFIG ───────────────────────────────────────────────────
 const ENVS = {
   local: 'http://localhost:4002/api/v1',
-  uat:   'http://smartpanchayat.co.in/api',
+  uat:   'https://smartpanchayat.co.in/api/api/v1',
 };
 
 const arg     = process.argv[2] || 'local';

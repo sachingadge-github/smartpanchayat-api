@@ -21,6 +21,8 @@ const getById = async (id) => {
 };
 
 const list = async ({ panchayat_id, type, page = 1, limit = 10 }) => {
+  page = parseInt(page, 10);
+  limit = parseInt(limit, 10);
   let where = 'WHERE 1=1';
   const params = [];
   if (panchayat_id) { where += ' AND n.panchayat_id = ?'; params.push(panchayat_id); }

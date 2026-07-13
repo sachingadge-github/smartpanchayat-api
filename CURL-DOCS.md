@@ -3,7 +3,7 @@
 All endpoints with sample payloads for **Local** and **UAT** environments.
 
 - **Local** base: `http://localhost:4002/api/v1`
-- **UAT** base: `http://smartpanchayat.co.in/api`
+- **UAT** base: `https://smartpanchayat.co.in/api/api/v1`
 
 Set the token variable after login:
 ```bash
@@ -24,7 +24,7 @@ $TOKEN = "<your_accessToken_here>"
 curl http://localhost:4002/health
 
 # UAT
-curl http://smartpanchayat.co.in/health
+curl https://smartpanchayat.co.in/health
 ```
 
 ---
@@ -39,7 +39,7 @@ curl -X POST http://localhost:4002/api/v1/auth/send-otp \
   -d '{"mobile":"9876543210"}'
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/auth/send-otp \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/auth/send-otp \
   -H "Content-Type: application/json" \
   -d '{"mobile":"9876543210"}'
 ```
@@ -52,7 +52,7 @@ curl -X POST http://localhost:4002/api/v1/auth/verify-otp \
   -d '{"mobile":"9876543210","otp":"123456"}'
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/auth/verify-otp \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/auth/verify-otp \
   -H "Content-Type: application/json" \
   -d '{"mobile":"9876543210","otp":"123456"}'
 ```
@@ -66,7 +66,7 @@ curl -X POST http://localhost:4002/api/v1/auth/refresh \
   -d '{"refreshToken":"<your_refreshToken>"}'
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/auth/refresh \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/auth/refresh \
   -H "Content-Type: application/json" \
   -d '{"refreshToken":"<your_refreshToken>"}'
 ```
@@ -78,7 +78,7 @@ curl -X POST http://localhost:4002/api/v1/auth/logout \
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/auth/logout \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/auth/logout \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -93,7 +93,7 @@ curl http://localhost:4002/api/v1/citizen/profile \
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl http://smartpanchayat.co.in/api/citizen/profile \
+curl https://smartpanchayat.co.in/api/api/v1/citizen/profile \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -112,7 +112,7 @@ curl -X PUT http://localhost:4002/api/v1/citizen/profile \
   }'
 
 # UAT
-curl -X PUT http://smartpanchayat.co.in/api/citizen/profile \
+curl -X PUT https://smartpanchayat.co.in/api/api/v1/citizen/profile \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{
@@ -134,7 +134,7 @@ curl -X PUT http://smartpanchayat.co.in/api/citizen/profile \
 curl "http://localhost:4002/api/v1/panchayats?page=1&limit=10"
 
 # UAT
-curl "http://smartpanchayat.co.in/api/panchayats?page=1&limit=10"
+curl "https://smartpanchayat.co.in/api/api/v1/panchayats?page=1&limit=10"
 ```
 
 ### GET /panchayats/:id
@@ -143,7 +143,7 @@ curl "http://smartpanchayat.co.in/api/panchayats?page=1&limit=10"
 curl http://localhost:4002/api/v1/panchayats/1
 
 # UAT
-curl http://smartpanchayat.co.in/api/panchayats/1
+curl https://smartpanchayat.co.in/api/api/v1/panchayats/1
 ```
 
 ### GET /panchayats/:id/stats  *(requires auth)*
@@ -153,7 +153,7 @@ curl http://localhost:4002/api/v1/panchayats/1/stats \
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl http://smartpanchayat.co.in/api/panchayats/1/stats \
+curl https://smartpanchayat.co.in/api/api/v1/panchayats/1/stats \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -177,7 +177,7 @@ curl -X POST http://localhost:4002/api/v1/complaints \
   }'
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/complaints \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/complaints \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{
@@ -197,7 +197,7 @@ curl "http://localhost:4002/api/v1/complaints/mine?page=1&limit=10" \
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl "http://smartpanchayat.co.in/api/complaints/mine?page=1&limit=10" \
+curl "https://smartpanchayat.co.in/api/api/v1/complaints/mine?page=1&limit=10" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -208,7 +208,7 @@ curl http://localhost:4002/api/v1/complaints/1 \
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl http://smartpanchayat.co.in/api/complaints/1 \
+curl https://smartpanchayat.co.in/api/api/v1/complaints/1 \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -219,7 +219,7 @@ curl "http://localhost:4002/api/v1/complaints/panchayat/1?status=open&page=1&lim
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl "http://smartpanchayat.co.in/api/complaints/panchayat/1?status=open&page=1&limit=10" \
+curl "https://smartpanchayat.co.in/api/api/v1/complaints/panchayat/1?status=open&page=1&limit=10" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -232,7 +232,7 @@ curl -X PATCH http://localhost:4002/api/v1/complaints/1/status \
   -d '{"status":"in_progress","remark":"Team dispatched to site"}'
 
 # UAT
-curl -X PATCH http://smartpanchayat.co.in/api/complaints/1/status \
+curl -X PATCH https://smartpanchayat.co.in/api/api/v1/complaints/1/status \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{"status":"in_progress","remark":"Team dispatched to site"}'
@@ -261,7 +261,7 @@ curl -X POST http://localhost:4002/api/v1/certificates \
   }'
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/certificates \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/certificates \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{
@@ -284,7 +284,7 @@ curl "http://localhost:4002/api/v1/certificates/mine?page=1&limit=10" \
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl "http://smartpanchayat.co.in/api/certificates/mine?page=1&limit=10" \
+curl "https://smartpanchayat.co.in/api/api/v1/certificates/mine?page=1&limit=10" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -295,7 +295,7 @@ curl http://localhost:4002/api/v1/certificates/1 \
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl http://smartpanchayat.co.in/api/certificates/1 \
+curl https://smartpanchayat.co.in/api/api/v1/certificates/1 \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -308,7 +308,7 @@ curl -X PATCH http://localhost:4002/api/v1/certificates/1/status \
   -d '{"status":"approved","remark":"Documents verified, certificate issued"}'
 
 # UAT
-curl -X PATCH http://smartpanchayat.co.in/api/certificates/1/status \
+curl -X PATCH https://smartpanchayat.co.in/api/api/v1/certificates/1/status \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{"status":"approved","remark":"Documents verified, certificate issued"}'
@@ -325,7 +325,7 @@ curl http://localhost:4002/api/v1/water-bills/dues \
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl http://smartpanchayat.co.in/api/water-bills/dues \
+curl https://smartpanchayat.co.in/api/api/v1/water-bills/dues \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -336,7 +336,7 @@ curl -X POST http://localhost:4002/api/v1/water-bills/1/pay/init \
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/water-bills/1/pay/init \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/water-bills/1/pay/init \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -349,7 +349,7 @@ curl -X POST http://localhost:4002/api/v1/water-bills/1/pay/confirm \
   -d '{"payment_ref":"pay_test_ref_12345"}'
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/water-bills/1/pay/confirm \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/water-bills/1/pay/confirm \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{"payment_ref":"pay_test_ref_12345"}'
@@ -365,7 +365,7 @@ curl -X POST http://smartpanchayat.co.in/api/water-bills/1/pay/confirm \
 curl "http://localhost:4002/api/v1/notices?panchayat_id=1&page=1&limit=10"
 
 # UAT
-curl "http://smartpanchayat.co.in/api/notices?panchayat_id=1&page=1&limit=10"
+curl "https://smartpanchayat.co.in/api/api/v1/notices?panchayat_id=1&page=1&limit=10"
 ```
 
 ### GET /notices/:id
@@ -374,7 +374,7 @@ curl "http://smartpanchayat.co.in/api/notices?panchayat_id=1&page=1&limit=10"
 curl http://localhost:4002/api/v1/notices/1
 
 # UAT
-curl http://smartpanchayat.co.in/api/notices/1
+curl https://smartpanchayat.co.in/api/api/v1/notices/1
 ```
 
 ### POST /notices  *(officer/admin)*
@@ -391,7 +391,7 @@ curl -X POST http://localhost:4002/api/v1/notices \
   }'
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/notices \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/notices \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{
@@ -409,7 +409,7 @@ curl -X DELETE http://localhost:4002/api/v1/notices/1 \
   -H "Authorization: Bearer $TOKEN"
 
 # UAT
-curl -X DELETE http://smartpanchayat.co.in/api/notices/1 \
+curl -X DELETE https://smartpanchayat.co.in/api/api/v1/notices/1 \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -423,7 +423,7 @@ curl -X DELETE http://smartpanchayat.co.in/api/notices/1 \
 curl "http://localhost:4002/api/v1/schemes?page=1&limit=10"
 
 # UAT
-curl "http://smartpanchayat.co.in/api/schemes?page=1&limit=10"
+curl "https://smartpanchayat.co.in/api/api/v1/schemes?page=1&limit=10"
 ```
 
 ### GET /schemes/:id
@@ -432,7 +432,7 @@ curl "http://smartpanchayat.co.in/api/schemes?page=1&limit=10"
 curl http://localhost:4002/api/v1/schemes/1
 
 # UAT
-curl http://smartpanchayat.co.in/api/schemes/1
+curl https://smartpanchayat.co.in/api/api/v1/schemes/1
 ```
 
 ---
@@ -448,7 +448,7 @@ curl -X POST http://localhost:4002/api/v1/upload \
   -F "type=certificate"
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/upload \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/upload \
   -H "Authorization: Bearer $TOKEN" \
   -F "file=@/path/to/document.pdf" \
   -F "type=certificate"
@@ -467,7 +467,7 @@ curl -X POST http://localhost:4002/api/v1/notifications/register \
   -d '{"token":"fcm_device_token_here","platform":"android"}'
 
 # UAT
-curl -X POST http://smartpanchayat.co.in/api/notifications/register \
+curl -X POST https://smartpanchayat.co.in/api/api/v1/notifications/register \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{"token":"fcm_device_token_here","platform":"android"}'
@@ -482,7 +482,7 @@ curl -X DELETE http://localhost:4002/api/v1/notifications/unregister \
   -d '{"token":"fcm_device_token_here"}'
 
 # UAT
-curl -X DELETE http://smartpanchayat.co.in/api/notifications/unregister \
+curl -X DELETE https://smartpanchayat.co.in/api/api/v1/notifications/unregister \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{"token":"fcm_device_token_here"}'

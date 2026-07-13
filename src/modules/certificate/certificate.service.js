@@ -28,6 +28,8 @@ const getById = async (id) => {
 };
 
 const listMine = async (citizenId, { status, type, page = 1, limit = 10 }) => {
+  page = parseInt(page, 10);
+  limit = parseInt(limit, 10);
   let where = 'WHERE c.citizen_id = ?';
   const params = [citizenId];
   if (status) { where += ' AND c.status = ?'; params.push(status); }
