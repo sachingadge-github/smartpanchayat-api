@@ -25,6 +25,7 @@ const list = async ({ category, search, page = 1, limit = 10 }) => {
 };
 
 const getById = async (id) => {
+  id = parseInt(id, 10);
   logger.debug('getById', { id });
   try {
     const [rows] = await pool.execute(`SELECT * FROM schemes WHERE id = ? LIMIT 1`, [id]);

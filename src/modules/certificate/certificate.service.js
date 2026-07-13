@@ -21,6 +21,7 @@ const apply = async (citizenId, data) => {
 };
 
 const getById = async (id) => {
+  id = parseInt(id, 10);
   logger.debug('getById', { id });
   try {
     const [rows] = await pool.execute(
@@ -67,6 +68,7 @@ const listMine = async (citizenId, { status, type, page = 1, limit = 10 }) => {
 };
 
 const updateStatus = async (id, status, remark, pdfUrl) => {
+  id = parseInt(id, 10);
   logger.info('updateStatus', { id, status, remark });
   try {
     await pool.execute(

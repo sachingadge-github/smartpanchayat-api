@@ -17,6 +17,7 @@ const create = async (data) => {
 };
 
 const getById = async (id) => {
+  id = parseInt(id, 10);
   logger.debug('getById', { id });
   try {
     const [rows] = await pool.execute(
@@ -58,6 +59,7 @@ const list = async ({ panchayat_id, type, page = 1, limit = 10 }) => {
 };
 
 const remove = async (id) => {
+  id = parseInt(id, 10);
   logger.info('Deleting notice', { id });
   try {
     await pool.execute(`DELETE FROM notices WHERE id = ?`, [id]);

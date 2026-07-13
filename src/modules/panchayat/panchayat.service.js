@@ -23,6 +23,7 @@ const getAll = async ({ search, district, taluka, page = 1, limit = 20 }) => {
 };
 
 const getById = async (id) => {
+  id = parseInt(id, 10);
   logger.debug('getById', { id });
   try {
     const [rows] = await pool.execute(
@@ -41,6 +42,7 @@ const getById = async (id) => {
 };
 
 const getStats = async (id) => {
+  id = parseInt(id, 10);
   logger.debug('getStats', { id });
   try {
     const [[stats]] = await pool.execute(

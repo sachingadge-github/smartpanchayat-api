@@ -15,6 +15,9 @@ const { errorHandler, notFound } = require('./middleware/error.middleware');
 
 const app = express();
 
+// Trust Nginx reverse proxy (fixes X-Forwarded-For for rate limiting & IP logging)
+app.set('trust proxy', 1);
+
 // Security & parsing
 app.use(helmet());
 app.use(cors());

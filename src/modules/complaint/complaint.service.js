@@ -22,6 +22,7 @@ const create = async (citizenId, data, photoUrl = null) => {
 };
 
 const getById = async (id) => {
+  id = parseInt(id, 10);
   logger.debug('getById', { id });
   try {
     const [rows] = await pool.execute(
@@ -66,6 +67,7 @@ const listMine = async (citizenId, { status, category, page = 1, limit = 10 }) =
 };
 
 const listByPanchayat = async (panchayatId, { status, category, page = 1, limit = 10 }) => {
+  panchayatId = parseInt(panchayatId, 10);
   page  = parseInt(page, 10);
   limit = parseInt(limit, 10);
   logger.debug('listByPanchayat', { panchayatId, status, category, page, limit });
@@ -91,6 +93,7 @@ const listByPanchayat = async (panchayatId, { status, category, page = 1, limit 
 };
 
 const updateStatus = async (id, status, remark) => {
+  id = parseInt(id, 10);
   logger.info('updateStatus', { id, status, remark });
   try {
     await pool.execute(
