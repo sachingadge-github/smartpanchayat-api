@@ -3,7 +3,7 @@ const R = require('../../utils/response');
 
 const create = async (req, res, next) => {
   try {
-    const photoUrl = req.file ? `/uploads/${req.file.filename}` : null;
+    const photoUrl = req.body.photo_url || null;
     const data = await service.create(req.user.id, req.body, photoUrl);
     return R.created(res, 'Complaint filed successfully', data);
   } catch (e) { next(e); }

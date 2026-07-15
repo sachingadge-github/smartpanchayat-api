@@ -5,11 +5,12 @@ const STATUS = ['open', 'in_progress', 'resolved', 'rejected'];
 
 const create = Joi.object({
   panchayat_id: Joi.number().integer().positive().required(),
-  category: Joi.string().valid(...CATEGORIES).required(),
-  description: Joi.string().min(10).max(1000).required(),
-  location: Joi.string().max(300),
-  latitude: Joi.number().min(-90).max(90),
-  longitude: Joi.number().min(-180).max(180),
+  category:     Joi.string().valid(...CATEGORIES).required(),
+  description:  Joi.string().min(10).max(1000).required(),
+  photo_url:    Joi.string().uri().max(2000).allow(null, ''),
+  location:     Joi.string().max(300),
+  latitude:     Joi.number().min(-90).max(90),
+  longitude:    Joi.number().min(-180).max(180),
 });
 
 const updateStatus = Joi.object({

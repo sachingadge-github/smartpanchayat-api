@@ -79,6 +79,7 @@ app.use(`${BASE}/notices`,       require('./modules/notice/notice.routes'));
 app.use(`${BASE}/schemes`,       require('./modules/scheme/scheme.routes'));
 app.use(`${BASE}/upload`,        require('./modules/upload/upload.routes'));
 app.use(`${BASE}/notifications`, require('./modules/notification/notification.routes'));
+app.use(`${BASE}/weather`,       require('./modules/weather/weather.routes'));
 
 // 404 & Error
 app.use(notFound);
