@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const TYPES = ['birth', 'death', 'income', 'residence'];
+const TYPES = ['birth', 'death', 'income', 'residence', 'marriage', 'property', 'receipt'];
 const STATUS = ['pending', 'under_review', 'approved', 'rejected', 'ready'];
 
 const apply = Joi.object({

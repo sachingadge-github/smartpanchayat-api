@@ -28,4 +28,7 @@ module.exports = {
     name: process.env.APP_NAME || 'Smart Panchayat',
     version: process.env.APP_VERSION || '1.0.0',
   },
+  firebase: {
+    serviceAccountPath: process.env.FIREBASE_SERVICE_ACCOUNT_PATH || null,
+  },
 };

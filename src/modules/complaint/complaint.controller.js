@@ -1,5 +1,6 @@
-const service = require('./complaint.service');
-const R = require('../../utils/response');
+const service      = require('./complaint.service');
+const notifService = require('../notification/notification.service');
+const R            = require('../../utils/response');
 
 const create = async (req, res, next) => {
   try {
@@ -30,9 +31,25 @@ const listByPanchayat = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
+const STATUS_MESSAGES = {
+  in_progress: 'Your complaint is being worked on',
+  resolved:    'Your complaint has been resolved',
+  rejected:    'Your complaint was reviewed and rejected',
+};
+
 const updateStatus = async (req, res, next) => {
   try {
     const data = await service.updateStatus(req.params.id, req.body.status, req.body.remark);
+
+    const msg = STATUS_MESSAGES[req.body.status];
+    if (msg && data.citizen_id) {
+      notifService.sendToUser(data.citizen_id, 'Complaint Update', msg, {
+        complaint_id: String(data.id),
+        status:       req.body.status,
+        reference_no: data.reference_no || '',
+      }).catch(() => {});
+    }
+
     return R.success(res, 'Status updated', data);
   } catch (e) { next(e); }
 };

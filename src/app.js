@@ -8,8 +8,9 @@ const rateLimit = require('express-rate-limit');
 const swaggerUi = require('swagger-ui-express');
 const YAML     = require('yamljs');
 
-const env    = require('./config/env');
-const logger = require('./utils/logger')('app');
+const env      = require('./config/env');
+const logger   = require('./utils/logger')('app');
+const firebase = require('./config/firebase');
 const { testConnection } = require('./config/database');
 const { errorHandler, notFound } = require('./middleware/error.middleware');
 
@@ -88,6 +89,7 @@ app.use(errorHandler);
 const PORT = env.port;
 app.listen(PORT, async () => {
   await testConnection();
+  firebase.init();
   logger.info(`${env.app.name} API running on http://localhost:${PORT}`);
   logger.info(`Swagger docs: http://localhost:${PORT}/api-docs`);
   logger.info(`Mode: ${env.nodeEnv}`);
