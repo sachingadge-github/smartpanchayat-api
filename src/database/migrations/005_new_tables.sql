@@ -15,25 +15,22 @@ ALTER TABLE certificates
   MODIFY COLUMN type ENUM('birth','death','income','residence','marriage','property') NOT NULL;
 
 -- complaints: add timeline + assignment + rating columns
-ALTER TABLE complaints
-  ADD COLUMN IF NOT EXISTS assigned_to_name        VARCHAR(255)  NULL,
-  ADD COLUMN IF NOT EXISTS assigned_to_designation VARCHAR(255)  NULL,
-  ADD COLUMN IF NOT EXISTS assigned_to_phone       VARCHAR(20)   NULL,
-  ADD COLUMN IF NOT EXISTS assigned_at             TIMESTAMP     NULL,
-  ADD COLUMN IF NOT EXISTS resolved_at             TIMESTAMP     NULL,
-  ADD COLUMN IF NOT EXISTS resolution_note         TEXT          NULL,
-  ADD COLUMN IF NOT EXISTS citizen_rating          TINYINT       NULL;
+ALTER TABLE complaints ADD COLUMN assigned_to_name        VARCHAR(255)  NULL;
+ALTER TABLE complaints ADD COLUMN assigned_to_designation VARCHAR(255)  NULL;
+ALTER TABLE complaints ADD COLUMN assigned_to_phone       VARCHAR(20)   NULL;
+ALTER TABLE complaints ADD COLUMN assigned_at             TIMESTAMP     NULL;
+ALTER TABLE complaints ADD COLUMN resolved_at             TIMESTAMP     NULL;
+ALTER TABLE complaints ADD COLUMN resolution_note         TEXT          NULL;
+ALTER TABLE complaints ADD COLUMN citizen_rating          TINYINT       NULL;
 
 -- notices: add pinning + attachment + author columns
-ALTER TABLE notices
-  ADD COLUMN IF NOT EXISTS is_pinned       TINYINT(1)    DEFAULT 0,
-  ADD COLUMN IF NOT EXISTS has_attachment  TINYINT(1)    DEFAULT 0,
-  ADD COLUMN IF NOT EXISTS attachment_url  VARCHAR(1000) NULL,
-  ADD COLUMN IF NOT EXISTS author          VARCHAR(255)  NULL;
+ALTER TABLE notices ADD COLUMN is_pinned       TINYINT(1)    DEFAULT 0;
+ALTER TABLE notices ADD COLUMN has_attachment  TINYINT(1)    DEFAULT 0;
+ALTER TABLE notices ADD COLUMN attachment_url  VARCHAR(1000) NULL;
+ALTER TABLE notices ADD COLUMN author          VARCHAR(255)  NULL;
 
 -- citizens: add photo_url column
-ALTER TABLE citizens
-  ADD COLUMN IF NOT EXISTS photo_url VARCHAR(1000) NULL;
+ALTER TABLE citizens ADD COLUMN photo_url VARCHAR(1000) NULL;
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- STEP 2: Create new tables
