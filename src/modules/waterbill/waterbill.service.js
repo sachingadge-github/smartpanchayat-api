@@ -70,4 +70,27 @@ const confirmPayment = async (billId, citizenId, paymentRef) => {
   }
 };
 
-module.exports = { getDues, getBill, initPayment, confirmPayment };
+const getHistory = async (citizenId) => {
+  citizenId = parseInt(citizenId, 10);
+  logger.debug('getHistory', { citizenId });
+  try {
+    const [rows] = await pool.execute(
+      `SELECT id, amount, payment_date as date, receipt_no,
+              CONCAT('पाणीपट्टी बिल ', IFNULL(year,''), IFNULL(CONCAT('-', month),'')) as description
+       FROM water_bills WHERE citizen_id = ? AND paid = 1 ORDER BY payment_date DESC`,
+      [citizenId]
+    );
+    return rows.map(r => ({
+      id:          `h_${r.id}`,
+      description: r.description,
+      amount:      parseFloat(r.amount),
+      date:        r.date,
+      receipt_no:  r.receipt_no,
+    }));
+  } catch (err) {
+    logger.error('getHistory failed', { citizenId, sqlMessage: err.sqlMessage, code: err.code });
+    throw err;
+  }
+};
+
+module.exports = { getDues, getBill, initPayment, confirmPayment, getHistory };

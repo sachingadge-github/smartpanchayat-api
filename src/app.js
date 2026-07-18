@@ -70,17 +70,23 @@ app.get('/health', (req, res) => res.json({
 
 // Routes
 const BASE = '/api/v1';
-app.use(`${BASE}/auth`,          require('./modules/auth/auth.routes'));
-app.use(`${BASE}/citizen`,       require('./modules/citizen/citizen.routes'));
-app.use(`${BASE}/panchayats`,    require('./modules/panchayat/panchayat.routes'));
-app.use(`${BASE}/complaints`,    require('./modules/complaint/complaint.routes'));
-app.use(`${BASE}/certificates`,  require('./modules/certificate/certificate.routes'));
-app.use(`${BASE}/water-bills`,   require('./modules/waterbill/waterbill.routes'));
-app.use(`${BASE}/notices`,       require('./modules/notice/notice.routes'));
-app.use(`${BASE}/schemes`,       require('./modules/scheme/scheme.routes'));
-app.use(`${BASE}/upload`,        require('./modules/upload/upload.routes'));
-app.use(`${BASE}/notifications`, require('./modules/notification/notification.routes'));
-app.use(`${BASE}/weather`,       require('./modules/weather/weather.routes'));
+app.use(`${BASE}/auth`,              require('./modules/auth/auth.routes'));
+app.use(`${BASE}/citizen`,           require('./modules/citizen/citizen.routes'));
+app.use(`${BASE}/panchayats`,        require('./modules/panchayat/panchayat.routes'));
+app.use(`${BASE}/complaints`,        require('./modules/complaint/complaint.routes'));
+app.use(`${BASE}/certificates`,      require('./modules/certificate/certificate.routes'));
+app.use(`${BASE}/water-bills`,       require('./modules/waterbill/waterbill.routes'));
+app.use(`${BASE}/notices`,           require('./modules/notice/notice.routes'));
+app.use(`${BASE}/schemes`,           require('./modules/scheme/scheme.routes'));
+app.use(`${BASE}/upload`,            require('./modules/upload/upload.routes'));
+app.use(`${BASE}/notifications`,     require('./modules/notification/notification.routes'));
+app.use(`${BASE}/weather`,           require('./modules/weather/weather.routes'));
+// New modules
+app.use(`${BASE}/home`,              require('./modules/home/home.routes'));
+app.use(`${BASE}/citizen-services`,  require('./modules/citizen-services/citizenservices.routes'));
+app.use(`${BASE}/gram-sabha`,        require('./modules/gram-sabha/gramsabha.routes'));
+app.use(`${BASE}/ai`,                require('./modules/ai/ai.routes'));
+app.use(`${BASE}/payments`,          require('./modules/payments/payments.routes'));
 
 // 404 & Error
 app.use(notFound);

@@ -15,4 +15,14 @@ const updateProfile = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
-module.exports = { getProfile, updateProfile };
+const uploadPhoto = async (req, res, next) => {
+  try {
+    if (!req.file) return R.badRequest(res, 'Photo file is required', 'VALIDATION_ERROR');
+    const host = `${req.protocol}://${req.get('host')}`;
+    const photoUrl = `${host}/uploads/${req.file.filename}`;
+    const data = await service.updatePhoto(req.user.id, photoUrl);
+    return R.success(res, 'Profile photo updated', { photo_url: data.photo_url });
+  } catch (e) { next(e); }
+};
+
+module.exports = { getProfile, updateProfile, uploadPhoto };

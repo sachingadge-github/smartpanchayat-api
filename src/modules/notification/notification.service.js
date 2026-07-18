@@ -118,4 +118,88 @@ const _sendToTokens = async (tokens, title, body, data = {}) => {
   return { sent: totalSent, failed: totalFailed };
 };
 
-module.exports = { registerToken, removeToken, sendToUser, sendToPanchayat };
+// ── Persist & list notifications ─────────────────────────────────────────────
+
+const persist = async ({ citizen_id = null, panchayat_id = null, title, body, type = 'general', sender = null, route = null, meta = null, due_at = null }) => {
+  try {
+    await pool.execute(
+      `INSERT INTO notifications (citizen_id, panchayat_id, title, body, type, sender, route, meta, due_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [citizen_id, panchayat_id, title, body, type, sender,
+       route, meta ? JSON.stringify(meta) : null, due_at || null]
+    );
+  } catch (err) {
+    logger.warn('persist notification failed (non-fatal)', { err: err.message });
+  }
+};
+
+const listByUser = async (citizenId, panchayatId) => {
+  citizenId   = parseInt(citizenId, 10);
+  panchayatId = parseInt(panchayatId, 10);
+  logger.debug('listByUser', { citizenId, panchayatId });
+  try {
+    const [rows] = await pool.execute(
+      `SELECT * FROM notifications
+       WHERE citizen_id = ? OR (panchayat_id = ? AND citizen_id IS NULL)
+       ORDER BY created_at DESC LIMIT 50`,
+      [citizenId, panchayatId]
+    );
+    return rows.map(r => ({
+      ...r,
+      meta: r.meta ? (typeof r.meta === 'string' ? JSON.parse(r.meta) : r.meta) : null,
+    }));
+  } catch (err) {
+    logger.error('listByUser failed', { citizenId, sqlMessage: err.sqlMessage, code: err.code });
+    throw err;
+  }
+};
+
+const markRead = async (id, citizenId) => {
+  id        = parseInt(id, 10);
+  citizenId = parseInt(citizenId, 10);
+  logger.debug('markRead', { id, citizenId });
+  try {
+    await pool.execute(
+      `UPDATE notifications SET is_read = 1
+       WHERE id = ? AND (citizen_id = ? OR citizen_id IS NULL)`,
+      [id, citizenId]
+    );
+  } catch (err) {
+    logger.error('markRead failed', { id, sqlMessage: err.sqlMessage, code: err.code });
+    throw err;
+  }
+};
+
+const markAllRead = async (citizenId, panchayatId) => {
+  citizenId   = parseInt(citizenId, 10);
+  panchayatId = parseInt(panchayatId, 10);
+  logger.debug('markAllRead', { citizenId });
+  try {
+    await pool.execute(
+      `UPDATE notifications SET is_read = 1
+       WHERE citizen_id = ? OR (panchayat_id = ? AND citizen_id IS NULL)`,
+      [citizenId, panchayatId]
+    );
+  } catch (err) {
+    logger.error('markAllRead failed', { citizenId, sqlMessage: err.sqlMessage, code: err.code });
+    throw err;
+  }
+};
+
+const getUnreadCount = async (citizenId, panchayatId) => {
+  citizenId   = parseInt(citizenId, 10);
+  panchayatId = parseInt(panchayatId, 10);
+  try {
+    const [[{ count }]] = await pool.execute(
+      `SELECT COUNT(*) as count FROM notifications
+       WHERE is_read = 0 AND (citizen_id = ? OR (panchayat_id = ? AND citizen_id IS NULL))`,
+      [citizenId, panchayatId]
+    );
+    return parseInt(count, 10);
+  } catch (err) {
+    logger.error('getUnreadCount failed', { citizenId, sqlMessage: err.sqlMessage, code: err.code });
+    throw err;
+  }
+};
+
+module.exports = { registerToken, removeToken, sendToUser, sendToPanchayat, persist, listByUser, markRead, markAllRead, getUnreadCount };

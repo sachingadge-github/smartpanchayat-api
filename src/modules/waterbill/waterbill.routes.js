@@ -3,7 +3,8 @@ const ctrl = require('./waterbill.controller');
 const { authenticate } = require('../../middleware/auth.middleware');
 
 router.use(authenticate);
-router.get('/dues', ctrl.getDues);
+router.get('/dues',    ctrl.getDues);
+router.get('/history', ctrl.getHistory);
 router.post('/:id/pay/init', ctrl.initPayment);
 router.post('/:id/pay/confirm', ctrl.confirmPayment);
 

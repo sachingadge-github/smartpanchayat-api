@@ -22,4 +22,11 @@ const confirmPayment = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
-module.exports = { getDues, initPayment, confirmPayment };
+const getHistory = async (req, res, next) => {
+  try {
+    const data = await service.getHistory(req.user.id);
+    return R.success(res, 'Payment history fetched', data);
+  } catch (e) { next(e); }
+};
+
+module.exports = { getDues, initPayment, confirmPayment, getHistory };

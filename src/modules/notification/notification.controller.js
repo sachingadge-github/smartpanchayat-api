@@ -33,4 +33,35 @@ const sendToPanchayat = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
-module.exports = { registerToken, removeToken, sendToUser, sendToPanchayat };
+const list = async (req, res, next) => {
+  try {
+    const panchayatId = req.user.panchayat_id || 0;
+    const data = await service.listByUser(req.user.id, panchayatId);
+    return R.success(res, 'Notifications fetched', data);
+  } catch (e) { next(e); }
+};
+
+const markRead = async (req, res, next) => {
+  try {
+    await service.markRead(req.params.id, req.user.id);
+    return R.success(res, 'Marked as read');
+  } catch (e) { next(e); }
+};
+
+const markAllRead = async (req, res, next) => {
+  try {
+    const panchayatId = req.user.panchayat_id || 0;
+    await service.markAllRead(req.user.id, panchayatId);
+    return R.success(res, 'All notifications marked as read');
+  } catch (e) { next(e); }
+};
+
+const getUnreadCount = async (req, res, next) => {
+  try {
+    const panchayatId = req.user.panchayat_id || 0;
+    const unread_count = await service.getUnreadCount(req.user.id, panchayatId);
+    return R.success(res, 'Unread count fetched', { unread_count });
+  } catch (e) { next(e); }
+};
+
+module.exports = { registerToken, removeToken, sendToUser, sendToPanchayat, list, markRead, markAllRead, getUnreadCount };

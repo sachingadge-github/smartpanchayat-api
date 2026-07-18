@@ -19,4 +19,12 @@ const updateProfile = async (id, data) => {
   return getProfile(id);
 };
 
-module.exports = { getProfile, updateProfile };
+const updatePhoto = async (id, photoUrl) => {
+  await pool.execute(
+    `UPDATE citizens SET photo_url = ?, updated_at = NOW() WHERE id = ?`,
+    [photoUrl, id]
+  );
+  return getProfile(id);
+};
+
+module.exports = { getProfile, updateProfile, updatePhoto };

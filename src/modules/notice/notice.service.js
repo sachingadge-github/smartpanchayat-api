@@ -21,7 +21,13 @@ const getById = async (id) => {
   logger.debug('getById', { id });
   try {
     const [rows] = await pool.execute(
-      `SELECT n.*, p.name as panchayat_name FROM notices n
+      `SELECT n.*,
+         p.name as panchayat_name,
+         COALESCE(n.author, p.name) as author,
+         COALESCE(n.is_pinned, 0) as is_pinned,
+         COALESCE(n.has_attachment, 0) as has_attachment,
+         n.attachment_url
+       FROM notices n
        JOIN panchayats p ON n.panchayat_id = p.id WHERE n.id = ? LIMIT 1`,
       [id]
     );
@@ -44,9 +50,15 @@ const list = async ({ panchayat_id, type, page = 1, limit = 10 }) => {
   const offset = (page - 1) * limit;
   try {
     const [rows] = await pool.execute(
-      `SELECT n.*, p.name as panchayat_name FROM notices n
+      `SELECT n.*,
+         p.name as panchayat_name,
+         COALESCE(n.author, p.name) as author,
+         COALESCE(n.is_pinned, 0) as is_pinned,
+         COALESCE(n.has_attachment, 0) as has_attachment,
+         n.attachment_url
+       FROM notices n
        JOIN panchayats p ON n.panchayat_id = p.id
-       ${where} ORDER BY n.created_at DESC LIMIT ${limit} OFFSET ${offset}`,
+       ${where} ORDER BY n.is_pinned DESC, n.created_at DESC LIMIT ${limit} OFFSET ${offset}`,
       params
     );
     const [[{ total }]] = await pool.execute(`SELECT COUNT(*) as total FROM notices n ${where}`, params);

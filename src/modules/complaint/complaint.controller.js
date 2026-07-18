@@ -54,4 +54,26 @@ const updateStatus = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
-module.exports = { create, getById, listMine, listByPanchayat, updateStatus };
+const getCategories = async (req, res, next) => {
+  try {
+    return R.success(res, 'Complaint categories fetched', service.getCategories());
+  } catch (e) { next(e); }
+};
+
+const getByIdFull = async (req, res, next) => {
+  try {
+    const data = await service.getByIdFull(req.params.id);
+    return R.success(res, 'Complaint fetched', data);
+  } catch (e) { next(e); }
+};
+
+const rateComplaint = async (req, res, next) => {
+  try {
+    const { rating, comment } = req.body;
+    if (!rating || rating < 1 || rating > 5) return R.badRequest(res, 'rating must be between 1 and 5');
+    const data = await service.rateComplaint(req.params.id, req.user.id, rating, comment);
+    return R.success(res, 'Rating submitted', data);
+  } catch (e) { next(e); }
+};
+
+module.exports = { create, getById: getByIdFull, listMine, listByPanchayat, updateStatus, getCategories, rateComplaint };
