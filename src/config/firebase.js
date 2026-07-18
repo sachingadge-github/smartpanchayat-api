@@ -14,15 +14,16 @@ function init() {
   }
 
   try {
-    const serviceAccount = require(path.resolve(keyPath));
+    const resolvedPath = path.resolve(keyPath);
     if (!admin.apps.length) {
-      admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+      // Pass path string directly — firebase-admin reads + parses JSON internally
+      admin.initializeApp({ credential: admin.credential.cert(resolvedPath) });
     }
     messaging = admin.messaging();
     logger.info('Firebase Admin SDK initialised');
     return messaging;
   } catch (err) {
-    logger.error('Firebase init failed', { error: err.message });
+    logger.error('Firebase init failed', { error: err.message, stack: err.stack });
     return null;
   }
 }
