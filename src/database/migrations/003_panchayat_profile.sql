@@ -77,7 +77,7 @@ INSERT IGNORE INTO panchayat_profiles
 VALUES
   (1,
    'Nerle is a scenic village in Valva taluka known for its sugarcane farming and rich cultural heritage.',
-   'Nerle Gram Panchayat was established post-independence as part of Maharashtra's rural self-governance initiative.',
+   'Nerle Gram Panchayat was established post-independence as part of Maharashtra''s rural self-governance initiative.',
    'A digitally empowered, self-sufficient village with 100% literacy and clean water for every household.',
    1952, 12.50, 310, 78.50,
    'Farming, Sugarcane, Dairy',
